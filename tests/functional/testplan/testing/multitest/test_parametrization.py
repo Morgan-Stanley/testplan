@@ -2,7 +2,7 @@ import sys
 import logging
 from contextlib import contextmanager
 from unittest import mock
-from imp import reload
+from importlib import reload
 
 import pytest
 
