@@ -42,7 +42,10 @@ import { encodeURIComponent2, parseToJson } from "../Common/utils";
 import { POLL_MS, CATEGORIES } from "../Common/defaults";
 import { AssertionContext, defaultAssertionStatus } from "../Common/context";
 import { ErrorBoundary } from "../Common/ErrorBoundary";
-import { displayTimeInfoPreference, timeInfoUTCPreference } from "../UserSettings/UserSettings";
+import {
+  displayTimeInfoPreference,
+  timeInfoUTCPreference,
+} from "../UserSettings/UserSettings";
 
 const api_prefix = "/api/v1/interactive";
 const pendingEnvRequestAtom = atom("");
@@ -87,6 +90,7 @@ class InteractiveReportComponent extends BaseReport {
       running: false,
       aborting: false,
       assertionStatus: defaultAssertionStatus,
+      firstGet: true, // state variable to track the first getReport
     };
   }
 
@@ -119,7 +123,7 @@ class InteractiveReportComponent extends BaseReport {
    *
    * If running in dev mode we just display a fake report.
    */
-  getReport() {
+  getReport(firstGet = true) {
     if (this.state.aborting) {
       this.setError({ message: "Server is aborting ..." });
       return;
@@ -127,8 +131,11 @@ class InteractiveReportComponent extends BaseReport {
     if (this.props.match.params.uid === "_dev") {
       setTimeout(() => this.setReport(FakeInteractiveReport), 1500);
     } else {
+      const url = firstGet
+        ? "/api/v1/interactive/report?full=true"
+        : "/api/v1/interactive/report";
       axios
-        .get("/api/v1/interactive/report", { transformResponse: parseToJson })
+        .get(url, { transformResponse: parseToJson })
         .then((response) => {
           if (
             response.data.runtime_status === "ready" ||
@@ -142,10 +149,9 @@ class InteractiveReportComponent extends BaseReport {
               this.setState({ running: false });
             }
           }
-          if (
-            !this.state.report ||
-            this.state.report.hash !== response.data.hash
-          ) {
+          if (firstGet) {
+            this.setReport(response.data);
+          } else if (this.state.report.hash !== response.data.hash) {
             this.getTests().then((tests) => {
               const rawReport = { ...response.data, entries: tests };
               this.setReport(rawReport);
@@ -155,7 +161,10 @@ class InteractiveReportComponent extends BaseReport {
         .catch(this.setError)
         .finally(() => {
           // We poll for updates to the report every second.
-          setTimeout(this.getReport, this.props.poll_intervall || POLL_MS);
+          setTimeout(
+            () => this.getReport(false),
+            this.props.poll_intervall || POLL_MS
+          );
         });
     }
   }
@@ -491,9 +500,7 @@ class InteractiveReportComponent extends BaseReport {
     };
 
     if (!isReportLeaf(reportEntry) && !_.isEmpty(entries)) {
-      pruneEntry.entries = entries.map((entry) =>
-        this.pruneReportEntry(entry)
-      );
+      pruneEntry.entries = entries.map((entry) => this.pruneReportEntry(entry));
     }
 
     return pruneEntry;

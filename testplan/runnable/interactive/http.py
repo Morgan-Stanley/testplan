@@ -127,8 +127,9 @@ def generate_interactive_api(ihandler):
 
         def get(self):
             """Get the state of the root interactive report."""
+            full = flask.request.args.get("full", "false").lower() == "true"
             with ihandler.report_mutex:
-                return _serialize_report_entry(ihandler.report)
+                return _serialize_report_entry(ihandler.report, full=full)
 
         def put(self):
             """Update the state of the root interactive report."""
@@ -752,8 +753,7 @@ def _validate_json_body(json_body: Dict) -> None:
     if json_body is None:
         raise werkzeug.exceptions.BadRequest("JSON body is required for PUT")
 
-
-def _serialize_report_entry(report_entry):
+def _serialize_report_entry(report_entry, full=False):
     """
     Serialize a report entry representing a testcase or a test group.
     For a test group shallow serialization is used instead.
@@ -761,7 +761,10 @@ def _serialize_report_entry(report_entry):
     if isinstance(report_entry, TestCaseReport):
         return report_entry.serialize()
     elif isinstance(report_entry, (TestGroupReport, TestReport)):
-        return report_entry.shallow_serialize()
+        if full:
+            return report_entry.serialize()
+        else:
+            return report_entry.shallow_serialize()
     else:
         raise TypeError(f"Unexpected report entry type: {type(report_entry)}")
 
