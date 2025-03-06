@@ -27,6 +27,7 @@ import psutil
 from schema import Or
 
 from testplan.common.config import Config, ConfigOption
+from testplan.common.report import Status
 from testplan.common.utils import logger
 from testplan.common.utils.path import default_runpath, makedirs, makeemptydirs
 from testplan.common.utils.strings import slugify, uuid4
@@ -690,6 +691,7 @@ class Entity(logger.Loggable):
         self.logger.info("Aborting %s", self)
         self.aborting()
         self._aborted = True
+        self.report.status_override = Status.INCOMPLETE
         self.logger.info("Aborted %s", self)
 
     def abort_dependencies(self):
@@ -1041,7 +1043,7 @@ class Runnable(Entity):
         """
         Runs the runnable object by executing a batch of steps.
         """
-        start_threads, start_procs = self._get_start_info()
+        start_threads, start_procs = self._get_process_info()
 
         self._add_step(self.setup)
         self.add_pre_resource_steps()
@@ -1060,16 +1062,16 @@ class Runnable(Entity):
         self._post_run_checks(start_threads, start_procs)
 
     @staticmethod
-    def _get_start_info():
+    def _get_process_info(recursive=False):
         """
         :return: lists of threads and child processes, to be passed to the
             _post_run_checks method after the run has finished.
         """
-        start_threads = threading.enumerate()
+        threads = threading.enumerate()
         current_proc = psutil.Process()
-        start_children = current_proc.children()
+        children = current_proc.children(recursive)
 
-        return start_threads, start_children
+        return threads, children
 
     def _post_run_checks(self, start_threads, start_procs):
         """

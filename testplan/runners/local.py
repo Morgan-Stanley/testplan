@@ -130,11 +130,14 @@ class LocalRunner(Executor):
     def aborting(self) -> None:
         """Aborting logic."""
         self.discard_pending_tasks(
-            report_status=Status.ERROR, report_reason=f"due to {self} aborted"
+            report_status=Status.INCOMPLETE,
+            report_reason=f"due to {self} aborted",
         )
 
     def discard_pending_tasks(
-        self, report_status: Status = Status.NONE, report_reason: str = ""
+        self,
+        report_status: Status = Status.INCOMPLETE,
+        report_reason: str = "",
     ):
         with self._curr_runnable_lock:
             self._discard_pending = True
@@ -144,19 +147,24 @@ class LocalRunner(Executor):
             self.logger.warning("Discard pending tasks of %s.", self)
             while self.ongoing:
                 uid = self.ongoing.pop(0)
-                if report_status:
+                try:
+                    result = self.added_items[uid].result
+                    result.report.status_override = report_status
+                except (KeyError, AttributeError):
                     result = TestResult()
                     result.report = TestGroupReport(
                         name=uid,
                         category=ReportCategories.ERROR,
                     )
                     result.report.status_override = report_status
+                else:
                     result.report.logger.warning(
                         "Test[%s] discarded%s.",
                         uid,
                         " " + report_reason if report_reason else "",
                     )
                     self._results[uid] = result
+
                 if report_reason:
                     self.logger.warning(
                         "Discarding Test[%s] %s.", uid, report_reason
