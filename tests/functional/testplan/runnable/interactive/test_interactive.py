@@ -148,14 +148,12 @@ def test_top_level_tests():
         BTLReset = load_from_json(
             Path(__file__).parent / "reports" / "basic_top_level_reset.data"
         )
-        assert (
-            compare(
-                BTLReset,
-                plan.interactive.report.serialize(),
-                ignore=["hash", "information", "line_no"],
-            )[0]
-            is True
+        res = compare(
+            BTLReset,
+            plan.interactive.report.serialize(),
+            ignore=["hash", "information", "timezone"],
         )
+        assert res[0] is True
 
         # RUN ALL TESTS
         plan.interactive.run_all_tests()
@@ -163,59 +161,45 @@ def test_top_level_tests():
         BTLevel = load_from_json(
             Path(__file__).parent / "reports" / "basic_top_level.data"
         )
-        assert (
-            compare(
-                BTLevel,
-                plan.interactive.report.serialize(),
-                ignore=[
-                    "hash",
-                    "information",
-                    "timer",
-                    "machine_time",
-                    "utc_time",
-                    "file_path",
-                    "line_no",
-                    "code_context",
-                ],
-            )[0]
-            is True
+        res = compare(
+            BTLevel,
+            plan.interactive.report.serialize(),
+            ignore=[
+                "hash",
+                "information",
+                "timer",
+                "timestamp",
+                "timezone",
+            ],
         )
+        assert res[0] is True
 
         # RESET REPORTS
         plan.interactive.reset_all_tests()
-
-        assert (
-            compare(
-                BTLReset,
-                plan.interactive.report.serialize(),
-                ignore=["hash", "information"],
-            )[0]
-            is True
+        res = compare(
+            BTLReset,
+            plan.interactive.report.serialize(),
+            ignore=["hash", "information", "timezone"],
         )
+        assert res[0] is True
 
         # RUN SINGLE TESTSUITE (CUSTOM NAME)
-        plan.interactive.run_test_suite("Test2", "TCPSuite - Custom_1")
+        plan.interactive.run_test_suite("Test2", "Custom_1")
 
         BRSTest2 = load_from_json(
             Path(__file__).parent / "reports" / "basic_run_suite_test2.data"
         )
-        assert (
-            compare(
-                BRSTest2,
-                plan.interactive.test_report("Test2"),
-                ignore=[
-                    "hash",
-                    "information",
-                    "timer",
-                    "machine_time",
-                    "utc_time",
-                    "file_path",
-                    "line_no",
-                    "code_context",
-                ],
-            )[0]
-            is True
+        res = compare(
+            BRSTest2,
+            plan.interactive.test_report("Test2"),
+            ignore=[
+                "hash",
+                "timer",
+                "timestamp",
+                "timezone",
+            ],
         )
+        assert res[0] is True
 
         # RUN SINGLE TESTCASE
         plan.interactive.run_test_case("Test1", "*", "basic_case__arg_1")
@@ -223,23 +207,17 @@ def test_top_level_tests():
         BRCTest1 = load_from_json(
             Path(__file__).parent / "reports" / "basic_run_case_test1.data"
         )
-        assert (
-            compare(
-                BRCTest1,
-                plan.interactive.test_report("Test1"),
-                ignore=[
-                    "hash",
-                    "information",
-                    "timer",
-                    "machine_time",
-                    "utc_time",
-                    "file_path",
-                    "line_no",
-                    "code_context",
-                ],
-            )[0]
-            is True
+        res = compare(
+            BRCTest1,
+            plan.interactive.test_report("Test1"),
+            ignore=[
+                "hash",
+                "timer",
+                "timestamp",
+                "timezone",
+            ],
         )
+        assert res[0] is True
 
 
 def test_top_level_environment():

@@ -246,6 +246,23 @@ class ReportCategories:
     # use for before/after_start/stop, setup, teardown, etc
     SYNTHESIZED = "synthesized"
 
+    @classmethod
+    def is_test_level(cls, cat):
+        return cat in (
+            cls.MULTITEST,
+            cls.TASK_RERUN,
+            cls.GTEST,
+            cls.CPPUNIT,
+            cls.BOOST_TEST,
+            cls.HOBBESTEST,
+            cls.PYTEST,
+            cls.PYUNIT,
+            cls.UNITTEST,
+            cls.QUNIT,
+            cls.JUNIT,
+            cls.ERROR,
+        )
+
 
 class Report:
     """
@@ -510,7 +527,6 @@ class BaseReportGroup(Report):
         super(BaseReportGroup, self).__init__(name=name, **kwargs)
 
         self._index: Dict = {}
-        self.host: Optional[str] = None
         self.children = []
 
         self.build_index()

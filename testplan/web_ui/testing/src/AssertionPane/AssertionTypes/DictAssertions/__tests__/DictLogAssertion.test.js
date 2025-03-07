@@ -1,5 +1,5 @@
 import React from "react";
-import { shallow } from "enzyme";
+import { render } from "@testing-library/react";
 import { StyleSheetTestUtils } from "aphrodite";
 
 import DictLogAssertion from "../DictLogAssertion";
@@ -29,17 +29,17 @@ function defaultProps() {
 
 describe("DictLogAssertion", () => {
   let props;
-  let shallowComponent;
+  let component;
 
   beforeEach(() => {
     // Stop Aphrodite from injecting styles, this crashes the tests.
     StyleSheetTestUtils.suppressStyleInjection();
     props = defaultProps();
-    shallowComponent = undefined;
+    component = undefined;
   });
 
-  it("shallow renders the correct HTML structure", () => {
-    shallowComponent = shallow(<DictLogAssertion {...props} />);
-    expect(shallowComponent).toMatchSnapshot();
+  it("renders the correct HTML structure", () => {
+    component = render(<DictLogAssertion {...props} />);
+    expect(component.asFragment()).toMatchSnapshot();
   });
 });

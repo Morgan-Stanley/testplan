@@ -7,6 +7,7 @@ import {
   prepareDictColumnDefs,
   prepareDictRowData,
   dictCellStyle,
+  preprocessDictRows,
 } from "./dictAssertionUtils";
 import { SORT_TYPES } from "./../../../Common/defaults";
 
@@ -39,7 +40,10 @@ import { SORT_TYPES } from "./../../../Common/defaults";
  *
  */
 export default function DictLogAssertion(props) {
-  const flattenedDict = props.assertion.flattened_dict;
+  const flattenedDict = preprocessDictRows(
+    props.assertion.flattened_dict,
+    false
+  );
   const columns = prepareDictColumnDefs(dictCellStyle, DictCellRenderer);
 
   const [rowData, setRowData] = useState(flattenedDict);
@@ -61,7 +65,7 @@ export default function DictLogAssertion(props) {
     <DictBaseAssertion
       buttons={buttonGroup}
       columns={columns}
-      rows={prepareDictRowData(rowData, props.assertion.line_no)}
+      rows={prepareDictRowData(rowData)}
     />
   );
 }

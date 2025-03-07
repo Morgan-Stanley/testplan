@@ -1,9 +1,8 @@
 """Conversion utilities."""
 import itertools
-from typing import Union, Tuple, Iterable, Callable, List, Sequence
+from typing import Callable, Iterable, List, Optional, Sequence, Tuple, Union
 
 from .reporting import Absent
-
 
 RecursiveListTuple = List[Union[Tuple, Tuple["RecursiveListTuple"]]]
 
@@ -77,27 +76,11 @@ def make_iterables(values: Iterable) -> List[Union[List, Tuple]]:
     return iterables
 
 
-def full_status(status: str) -> str:
-    """
-    Human readable status label.
-
-    :param status: status label
-    :return: human-readable status label
-    """
-    if status == "p":
-        return "Passed"
-    elif status == "f":
-        return "Failed"
-    elif status == "i":
-        return "Ignored"
-    return ""
-
-
 def expand_values(
     rows: List[Tuple],
     level: int = 0,
     ignore_key: bool = False,
-    key_path: List = None,
+    key_path: Optional[List] = None,
     match: str = "",
 ):
     """
@@ -143,24 +126,6 @@ def expand_values(
 
         if key is not Absent:
             key_path.pop()
-
-
-# TODO: position parameter is misleading and it allows extracting
-#             the key or match information as value
-#             "left" or "right" choices would be enough for clarity and
-#             would fail earlier upon any change to structure
-def extract_values(comparison: List[Tuple], position: int) -> List:
-    """
-    Extracts one-side of a comparison result based on value position.
-
-    :param comparison: list of key, match, and value pair quadruples
-    :param position: index pointing to particular value
-    :return: list of key, match, and value triples
-    """
-    result = []
-    for item in comparison:
-        result.append((item[0], item[1], item[position]))
-    return result
 
 
 def flatten_formatted_object(formatted_obj):
@@ -232,10 +197,10 @@ def flatten_dict_comparison(comparison: List[Tuple]) -> List[List]:
     :param comparison: list of comparison results
     :return: result table to be used in display
     """
-    result_table = []  # level, key, left, right, result
+    result_table = []  # level, key, result, left, right
 
-    left = list(expand_values(extract_values(comparison, 2)))
-    right = list(expand_values(extract_values(comparison, 3)))
+    left = list(expand_values(map(lambda x: (x[0], x[1], x[2]), comparison)))
+    right = list(expand_values(map(lambda x: (x[0], x[1], x[3]), comparison)))
 
     while left or right:
         lpart, rpart = None, None
@@ -271,7 +236,7 @@ def flatten_dict_comparison(comparison: List[Tuple]) -> List[List]:
             level -= 1
             # key = '(group)'
 
-        status = full_status(lpart[3] if lpart else rpart[3])
+        status = lpart[3] if lpart else rpart[3]
         lval = lpart[4] if lpart else None
         rval = rpart[4] if rpart else None
         result_table.append(
@@ -295,3 +260,31 @@ def flatten_dict_comparison(comparison: List[Tuple]) -> List[List]:
             break
 
     return result_table
+
+
+def delta_encode_level(homo):
+    prev = 0
+    hetero = []
+    for r in homo:
+        level = r[0]
+        res = r[1:]
+        diff = level - prev
+        if diff != 0:
+            hetero.append(diff)
+        prev = level
+        hetero.append(res)
+
+    return hetero
+
+
+def delta_decode_level(hetero):
+    level = 0
+    homo = []
+    for r in hetero:
+        if isinstance(r, int):
+            level += r
+            continue
+        else:
+            homo.append([level, *r])
+
+    return homo

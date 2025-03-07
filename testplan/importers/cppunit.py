@@ -217,7 +217,9 @@ class CPPUnitResultImporter(ThreePhaseFileImporter[Element]):
             if testsuite.get("timestamp") is None:
                 testsuite.set(
                     "timestamp",
-                    datetime.datetime.utcnow().isoformat().split(".")[0],
+                    datetime.datetime.now(tz=datetime.timezone.utc)
+                    .isoformat()
+                    .split(".")[0],
                 )
             if testsuite.get("hostname") is None:
                 testsuite.set("hostname", socket.gethostname())

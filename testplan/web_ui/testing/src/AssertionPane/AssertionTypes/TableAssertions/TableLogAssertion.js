@@ -16,7 +16,7 @@ export default function TableLogAssertion(props) {
     props.assertion.display_index
   );
   let rowData = prepareTableLogRowData(
-    props.assertion.indices,
+    props.assertion.indices || [...Array(props.assertion.table.length).keys()],
     props.assertion.table,
     props.assertion.columns,
     props.assertion.display_index

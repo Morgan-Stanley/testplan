@@ -34,6 +34,7 @@
         "pytest-mock",
         "psutil",
         "schema",
+        "tzlocal",
         "lxml",
         "reportlab",
         "marshmallow",
@@ -110,7 +111,6 @@
     ]
 
 [tool.releaseherald]
-
     news_fragments_directory = 'doc/newsfragments'
     unreleased = true
     news_file = 'doc/news_template.rst'
@@ -121,3 +121,16 @@
 [tool.releaseherald.filename_metadata_extractor]
     type="re"
     pattern='''^(((?P<id>\d+)_?)?((?P<type>changed|new|deprecated|removed))?\.)?.*$'''
+
+[tool.pytest.ini_options]
+    filterwarnings = [
+        "ignore::pytest.PytestWarning",
+        "ignore:.*flask_restx.*:DeprecationWarning",
+        # jsonschema warning from flask_restx
+        "ignore:.*jsonschema.*:DeprecationWarning",
+        "ignore:.*load_module.*:DeprecationWarning",
+        "ignore:.*LogMatcher.*:UserWarning",
+        # under most cases, included files are not hit
+        "ignore:No data was collected:coverage.exceptions.CoverageWarning",
+    ]
+    norecursedirs = "tests/helpers"

@@ -8,6 +8,7 @@ import {
   prepareDictRowData,
   sortFlattenedJSON,
   dictCellStyle,
+  preprocessDictRows,
 } from "./dictAssertionUtils";
 import { SORT_TYPES, FILTER_OPTIONS } from "./../../../Common/defaults";
 
@@ -43,7 +44,7 @@ import { SORT_TYPES, FILTER_OPTIONS } from "./../../../Common/defaults";
  */
 export default function FixMatchAssertion(props) {
   const flattenedDict = sortFlattenedJSON(
-    props.assertion.comparison,
+    preprocessDictRows(props.assertion.comparison, true),
     0,
     false,
     true
@@ -74,7 +75,7 @@ export default function FixMatchAssertion(props) {
     <DictBaseAssertion
       buttons={buttonGroup}
       columns={columns}
-      rows={prepareDictRowData(rowData, props.assertion.line_no)}
+      rows={prepareDictRowData(rowData)}
     />
   );
 }

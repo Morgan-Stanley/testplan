@@ -24,13 +24,13 @@ library.add(faSortAmountUp, faSortAmountDown);
  * the table data to be displayed.
  */
 function DictButtonGroup({
-    defaultSortType,
-    defaultFilterOptions,
-    flattenedDict,
-    uid,
-    setRowData,
-    sortTypeList,
-    filterOptionList,
+  defaultSortType,
+  defaultFilterOptions,
+  flattenedDict,
+  uid,
+  setRowData,
+  sortTypeList,
+  filterOptionList,
 }) {
   const [selectedSortType, setSelectedSortType] = useState(
     defaultSortType || SORT_TYPES.NONE
@@ -39,7 +39,7 @@ function DictButtonGroup({
     defaultFilterOptions || []
   );
   const [sortedData, setSortedData] = useState(flattenedDict);
-  
+
   const noSort = () => {
     let sortedData = flattenedDict;
     setRowData(sortedData);
@@ -83,10 +83,7 @@ function DictButtonGroup({
       filterOptions.indexOf(FILTER_OPTIONS.FAILURES_ONLY) >= 0
         ? filterOptions.filter((opt) => opt !== FILTER_OPTIONS.FAILURES_ONLY)
         : filterOptions.concat([FILTER_OPTIONS.FAILURES_ONLY]);
-    let sortedData = sortAndFilterData(
-      selectedSortType,
-      filterOptions
-    );
+    let sortedData = sortAndFilterData(selectedSortType, filterOptions);
     setRowData(sortedData);
     setSelectedFilterOptions(filterOptions);
     setSortedData(sortedData);
@@ -100,10 +97,7 @@ function DictButtonGroup({
             (opt) => opt !== FILTER_OPTIONS.EXCLUDE_IGNORABLE
           )
         : filterOptions.concat([FILTER_OPTIONS.EXCLUDE_IGNORABLE]);
-    let sortedData = sortAndFilterData(
-      selectedSortType,
-      filterOptions
-    );
+    let sortedData = sortAndFilterData(selectedSortType, filterOptions);
     setRowData(sortedData);
     setSelectedFilterOptions(filterOptions);
     setSortedData(sortedData);
@@ -168,47 +162,39 @@ function DictButtonGroup({
 
   let buttonGroup = [];
 
-  sortTypeList.forEach(
-    (sortType) => {
+  sortTypeList.forEach((sortType) => {
+    buttonGroup.push(
+      <Button
+        key={buttonUid + "-" + sortType.toString()}
+        outline
+        color="secondary"
+        size="sm"
+        onClick={buttonMap[sortType]["onClick"]}
+        active={selectedSortType === sortType}
+      >
+        {buttonMap[sortType]["display"]}
+      </Button>
+    );
+  });
+
+  if (filterOptionList) {
+    filterOptionList.forEach((filterOption) => {
       buttonGroup.push(
         <Button
-          key={buttonUid + "-" + sortType.toString()}
+          key={buttonUid + "-" + filterOption.toString()}
           outline
           color="secondary"
           size="sm"
-          onClick={buttonMap[sortType]["onClick"]}
-          active={selectedSortType === sortType}
+          onClick={buttonMap[filterOption]["onClick"]}
+          active={selectedFilterOptions.indexOf(filterOption) >= 0}
         >
-          {buttonMap[sortType]["display"]}
+          {buttonMap[filterOption]["display"]}
         </Button>
       );
-    }
-  );
-
-  if (filterOptionList) {
-    filterOptionList.forEach(
-      (filterOption) => {
-        buttonGroup.push(
-          <Button
-            key={buttonUid + "-" + filterOption.toString()}
-            outline
-            color="secondary"
-            size="sm"
-            onClick={buttonMap[filterOption]["onClick"]}
-            active={
-              selectedFilterOptions.indexOf(filterOption) >= 0
-            }
-          >
-            {buttonMap[filterOption]["display"]}
-          </Button>
-        );
-      }
-    );
+    });
   }
 
-  let copyButton = (
-    <CopyButton value={flattenedDictToDOM(sortedData)} />
-  );
+  let copyButton = <CopyButton value={flattenedDictToDOM(sortedData)} />;
 
   return (
     <ButtonGroup style={{ paddingBottom: ".5rem" }}>

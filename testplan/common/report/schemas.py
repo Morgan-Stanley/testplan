@@ -1,7 +1,9 @@
 """
   Base schemas for report serialization.
 """
-from marshmallow import Schema, fields, post_load
+import datetime
+
+from marshmallow import Schema, fields, post_dump, post_load, pre_load
 from marshmallow.utils import EXCLUDE
 
 from testplan.common.report.base import (
@@ -22,8 +24,24 @@ __all__ = ["ReportLogSchema", "ReportSchema", "BaseReportGroupSchema"]
 class IntervalSchema(Schema):
     """Schema for ``timer.Interval``"""
 
-    start = custom_fields.UTCDateTime()
-    end = custom_fields.UTCDateTime(allow_none=True)
+    start = fields.DateTime("timestamp")
+    end = fields.DateTime("timestamp", allow_none=True)
+
+    @pre_load
+    def accept_old_isoformat(self, data, **kwargs):
+        try:
+            if data.get("start", None) and isinstance(data["start"], str):
+                data["start"] = datetime.datetime.fromisoformat(
+                    data["start"]
+                ).timestamp()
+            if data.get("end", None) and isinstance(data["end"], str):
+                data["end"] = datetime.datetime.fromisoformat(
+                    data["end"]
+                ).timestamp()
+            return data
+        except ValueError as e:
+            # no need to defer
+            raise ValueError("Invalid value when loading Interval.") from e
 
     @post_load
     def make_interval(self, data, **kwargs):
@@ -68,7 +86,7 @@ class ReportLogSchema(Schema):
     message = fields.String()
     levelname = fields.String()
     levelno = fields.Integer()
-    created = custom_fields.UTCDateTime()
+    created = fields.DateTime("timestamp")
     funcName = fields.String()
     lineno = fields.Integer()
     uid = fields.UUID()
@@ -125,6 +143,14 @@ class ReportSchema(schemas.TreeNodeSchema):
         rep.logs = logs
         rep.timer = timer
         return rep
+
+    @post_dump
+    def strip_none(self, data, **kwargs):
+        if data["status_override"] is None:
+            del data["status_override"]
+        if data["status_reason"] is None:
+            del data["status_reason"]
+        return data
 
 
 class BaseReportGroupSchema(ReportSchema):

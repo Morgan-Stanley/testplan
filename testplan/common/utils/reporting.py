@@ -78,8 +78,6 @@ def fmt(obj):
             ret = (0, None, str(obj))
         elif obj is None:
             ret = (0, None, None)
-        elif issubclass(obj_t, (int,)):
-            ret = (0, obj_t.__name__, str(obj))
         elif issubclass(obj_t, NATIVE_TYPES):
             ret = (0, obj_t.__name__, obj)
         elif isinstance(obj, ContextValue):

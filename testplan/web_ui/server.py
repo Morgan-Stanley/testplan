@@ -50,6 +50,7 @@ class WebUIServer(object):
 
     def browse(self):
         """Display the JSON report in Testplan UI."""
+        # NOTE: not being used
         self.display()
 
         if self._report_url:

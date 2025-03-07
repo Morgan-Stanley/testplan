@@ -1,7 +1,6 @@
 """Test the JSON exporter."""
 import copy
 import json
-import math
 import os
 import pathlib
 import tempfile

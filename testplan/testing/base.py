@@ -4,6 +4,7 @@ import os
 import subprocess
 import sys
 import warnings
+from datetime import timezone
 from enum import Enum
 from typing import (
     Callable,
@@ -16,6 +17,7 @@ from typing import (
     Type,
     Union,
 )
+
 from schema import And, Or, Use
 
 from testplan import defaults
@@ -816,13 +818,22 @@ class Test(Runnable):
             stdout_style=self.stdout_style, _scratch=self.scratch
         )
 
+        def _try_asutc(dt_or_none):
+            if dt_or_none:
+                return dt_or_none.astimezone(tz=timezone.utc)
+            return None
+
         # input for tablelog
         table = [
             {
                 "Driver Class": driver.__class__.__name__,
                 "Driver Name": driver.name,
-                "Start Time (UTC)": driver.timer.last(setup_or_teardown).start,
-                "Stop Time (UTC)": driver.timer.last(setup_or_teardown).end,
+                "Start Time (UTC)": _try_asutc(
+                    driver.timer.last(setup_or_teardown).start
+                ),
+                "Stop Time (UTC)": _try_asutc(
+                    driver.timer.last(setup_or_teardown).end
+                ),
                 "Duration(seconds)": driver.timer.last(
                     setup_or_teardown
                 ).elapsed,

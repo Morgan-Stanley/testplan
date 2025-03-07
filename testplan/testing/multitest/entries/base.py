@@ -12,7 +12,7 @@ import pathlib
 
 
 from testplan.common.utils.convert import nested_groups
-from testplan.common.utils.timing import utcnow
+from testplan.common.utils.timing import now
 from testplan.common.utils.table import TableEntry
 from testplan.common.utils.reporting import fmt
 from testplan.common.utils.convert import flatten_formatted_object
@@ -41,8 +41,7 @@ class BaseEntry:
     meta_type = "entry"
 
     def __init__(self, description, category=None, flag=None):
-        self.utc_time = utcnow()
-        self.machine_time = datetime.datetime.now()
+        self.timestamp = now()
         self.description = description
         self.category = category or DEFAULT_CATEGORY
         self.flag = flag or DEFAULT_FLAG
@@ -76,7 +75,7 @@ class Group:
     meta_type = "assertion"
 
     def __init__(self, entries, description=None):
-        self.utc_time = utcnow()
+        self.timestamp = now()
         self.description = description
         self.entries = entries
 
@@ -227,7 +226,9 @@ class TableLog(BaseEntry):
 
         as_list = TableEntry(table).as_list_of_list()
         self.columns, self.table = as_list[0], as_list[1:]
-        self.indices = range(len(self.table))
+        # NOTE: we don't allow custom indices up to now
+        # NOTE: we can add self.indices back if necessary
+        # self.indices = range(len(self.table))
         self.display_index = display_index
 
         super(TableLog, self).__init__(description=description)

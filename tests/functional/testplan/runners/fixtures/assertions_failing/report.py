@@ -1296,11 +1296,13 @@ expected_report = TestReport(
                                 {
                                     "type": "DictLog",
                                     "flattened_dict": [
-                                        [0, "alpha", ""],
-                                        [0, "", ("str", "foobar")],
-                                        [0, "", ""],
-                                        [1, "foo", ("str", "bar")],
-                                        [0, "beta", ("str", "hello world")],
+                                        ["alpha", ""],
+                                        ["", ("str", "foobar")],
+                                        ["", ""],
+                                        1,
+                                        ["foo", ("str", "bar")],
+                                        -1,
+                                        ["beta", ("str", "hello world")],
                                     ],
                                     "description": None,
                                 },
@@ -1381,66 +1383,58 @@ expected_report = TestReport(
                                     "type": "FixMatchAll",
                                     "passed": False,
                                     "description": "typed / unordered fix match all",
-                                    "matches": {
-                                        "matches": [
-                                            {
-                                                "comparison": [
-                                                    [
-                                                        0,
-                                                        10914,
-                                                        "Passed",
-                                                        ("str", "c1dec2c5"),
-                                                        ("str", "c1dec2c5"),
-                                                    ],
-                                                    [
-                                                        0,
-                                                        38,
-                                                        "Passed",
-                                                        ("str", "500"),
-                                                        ("str", "500"),
-                                                    ],
-                                                    [
-                                                        0,
-                                                        44,
-                                                        "Failed",
-                                                        ("float", 9.0),
-                                                        ("str", "9"),
-                                                    ],
+                                    "matches": [
+                                        {
+                                            "comparison": [
+                                                [
+                                                    10914,
+                                                    "p",
+                                                    ("str", "c1dec2c5"),
+                                                    ("str", "c1dec2c5"),
                                                 ],
-                                                "comparison_index": 1,
-                                                "description": "typed / unordered fix match all 1/2: expected[1] vs values[0]",
-                                                "passed": False,
-                                            },
-                                            {
-                                                "comparison": [
-                                                    [
-                                                        0,
-                                                        10914,
-                                                        "Passed",
-                                                        ("REGEX", ".+"),
-                                                        ("str", "f3ea6276"),
-                                                    ],
-                                                    [
-                                                        0,
-                                                        38,
-                                                        "Passed",
-                                                        ("int", "501"),
-                                                        ("int", "501"),
-                                                    ],
-                                                    [
-                                                        0,
-                                                        44,
-                                                        "Passed",
-                                                        ("float", 9.1),
-                                                        ("float", 9.1),
-                                                    ],
+                                                [
+                                                    38,
+                                                    "p",
+                                                    ("str", "500"),
+                                                    ("str", "500"),
                                                 ],
-                                                "comparison_index": 0,
-                                                "description": "typed / unordered fix match all 2/2: expected[0] vs values[1]",
-                                                "passed": True,
-                                            },
-                                        ]
-                                    },
+                                                [
+                                                    44,
+                                                    "f",
+                                                    ("float", 9.0),
+                                                    ("str", "9"),
+                                                ],
+                                            ],
+                                            "comparison_index": 1,
+                                            "description": "typed / unordered fix match all 1/2: expected[1] vs values[0]",
+                                            "passed": False,
+                                        },
+                                        {
+                                            "comparison": [
+                                                [
+                                                    10914,
+                                                    "p",
+                                                    ("REGEX", ".+"),
+                                                    ("str", "f3ea6276"),
+                                                ],
+                                                [
+                                                    38,
+                                                    "p",
+                                                    ("int", 501),
+                                                    ("int", 501),
+                                                ],
+                                                [
+                                                    44,
+                                                    "p",
+                                                    ("float", 9.1),
+                                                    ("float", 9.1),
+                                                ],
+                                            ],
+                                            "comparison_index": 0,
+                                            "description": "typed / unordered fix match all 2/2: expected[0] vs values[1]",
+                                            "passed": True,
+                                        },
+                                    ],
                                 }
                             ],
                         ),

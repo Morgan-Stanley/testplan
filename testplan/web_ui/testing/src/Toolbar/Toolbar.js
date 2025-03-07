@@ -28,6 +28,7 @@ import {
   EXPAND_STATUS,
   VIEW_TYPE,
 } from "../Common/defaults";
+import { timeToTimestamp } from "../Common/utils";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -185,8 +186,10 @@ const UserPreferenceRadio = ({ children, preferenceAtom, name, value }) => {
   const [preference, setPreference] = useAtom(preferenceAtom);
   return (
     <DropdownItem toggle={false} className={css(styles.dropdownItem)}>
-      <Label check className={css(
-        styles.filterLabel, styles.filterLabel_indent1)}>
+      <Label
+        check
+        className={css(styles.filterLabel, styles.filterLabel_indent1)}
+      >
         <Input
           type="radio"
           name={name}
@@ -201,22 +204,26 @@ const UserPreferenceRadio = ({ children, preferenceAtom, name, value }) => {
 };
 
 const TimeInfoRadioButtons = ({ enabled }) => {
-  let component = enabled ? 
-  <>
-    <UserPreferenceRadio
-      preferenceAtom={timeInfoUTCPreference}
-      name="timezone"
-      value={true}>
-      UTC time
-    </UserPreferenceRadio>
-    <UserPreferenceRadio
-      preferenceAtom={timeInfoUTCPreference}
-      name="timezone"
-      value={false}>
-      Server time
-    </UserPreferenceRadio>
-  </>
-  : "";
+  let component = enabled ? (
+    <>
+      <UserPreferenceRadio
+        preferenceAtom={timeInfoUTCPreference}
+        name="timezone"
+        value={true}
+      >
+        UTC time
+      </UserPreferenceRadio>
+      <UserPreferenceRadio
+        preferenceAtom={timeInfoUTCPreference}
+        name="timezone"
+        value={false}
+      >
+        Server time
+      </UserPreferenceRadio>
+    </>
+  ) : (
+    ""
+  );
   return component;
 };
 
@@ -239,7 +246,8 @@ const ToolbarPreferencesButton = ({ toolbarStyle }) => {
           Display time information
         </UserPreferenceCheckbox>
         <TimeInfoRadioButtons
-          enabled={useAtomValue(displayTimeInfoPreference)}/>
+          enabled={useAtomValue(displayTimeInfoPreference)}
+        />
         <UserPreferenceCheckbox
           preferenceAtom={displayPathPreference}
           title="You need to specify --code command line argument to use this function."
@@ -560,22 +568,14 @@ const getInfoTable = (report) => {
   });
 
   if (!_.isEmpty(report.timer?.run)) {
-    let start;
-    let end;
-
-    if (Array.isArray(report.timer.run)) {
-      start = report.timer.run.at(-1).start;
-      end = report.timer.run.at(-1).end;
-    } else {
-      start = report.timer.run.start;
-      end = report.timer.run.end;
-    }
+    let start = timeToTimestamp(report.timer.run.at(-1).start);
+    let end = timeToTimestamp(report.timer.run.at(-1).end);
 
     if (start) {
       infoList.push(
         <tr key="start">
           <td>start</td>
-          <td>{start}</td>
+          <td>{new Date(start).toISOString()}</td>
         </tr>
       );
     }
@@ -584,7 +584,7 @@ const getInfoTable = (report) => {
       infoList.push(
         <tr key="end">
           <td>end</td>
-          <td>{end}</td>
+          <td>{new Date(end).toISOString()}</td>
         </tr>
       );
     }

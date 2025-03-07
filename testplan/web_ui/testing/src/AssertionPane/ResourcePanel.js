@@ -171,7 +171,7 @@ const ResourceGraph = ({
                   if (index % tickInterval === 0) {
                     return `${dateFormat(
                       dateAddMinutes(value, timezoneOffset),
-                      "H:mm:ss"
+                      "HH:mm:ss"
                     )}Z`;
                   }
                   return null;
@@ -190,7 +190,7 @@ const ResourceGraph = ({
                 title: (context) => {
                   return `${dateFormat(
                     dateAddMinutes(context[0].raw.x, timezoneOffset),
-                    "H:mm:ss"
+                    "HH:mm:ss"
                   )}Z`;
                 },
                 label: (context) => {
@@ -277,7 +277,7 @@ const TimerGraph = ({ timerEntries, startTime, endTime }) => {
                 callback: (value, index) => {
                   return `${dateFormat(
                     dateAddMinutes(value, timezoneOffset),
-                    "H:mm:ss"
+                    "HH:mm:ss"
                   )}Z`;
                 },
               },
@@ -298,11 +298,11 @@ const TimerGraph = ({ timerEntries, startTime, endTime }) => {
                   return [
                     `From: ${dateFormat(
                       dateAddMinutes(context.raw[0], timezoneOffset),
-                      "H:mm:ss"
+                      "HH:mm:ss"
                     )}Z`,
                     `To: ${dateFormat(
                       dateAddMinutes(context.raw[1], timezoneOffset),
-                      "H:mm:ss"
+                      "HH:mm:ss"
                     )}Z`,
                     `Duration: ${(
                       (context.raw[1] - context.raw[0]) /
@@ -868,7 +868,7 @@ const SummaryContainer = ({
               callback: (value, index) => {
                 return `${dateFormat(
                   dateAddMinutes(value, timezoneOffset),
-                  "H:mm:ss"
+                  "HH:mm:ss"
                 )}Z`;
               },
             },
@@ -888,10 +888,10 @@ const SummaryContainer = ({
                   context.dataset.label,
                   `From: ${dateFormat(
                     dateAddMinutes(context.raw[0], timezoneOffset),
-                    "H:mm:ss"
+                    "HH:mm:ss"
                   )}Z To: ${dateFormat(
                     dateAddMinutes(context.raw[1], timezoneOffset),
-                    "H:mm:ss"
+                    "HH:mm:ss"
                   )}Z`,
                   `Duration: ${(
                     (context.raw[1] - context.raw[0]) /
@@ -1063,10 +1063,10 @@ const ResourcePanel = ({ report }) => {
   } else if (resourceMeta) {
     const { resourceEntries, timerEntries } = resourceMeta;
     const testStartTime = Array.isArray(report.timer.run)
-      ? new Date(report.timer.run[0].start).getTime()
+      ? timeToTimestamp(report.timer.run[0].start)
       : new Date(report.timer.run.start).getTime();
     const testEndTime = Array.isArray(report.timer.run)
-      ? new Date(report.timer.run[0].end).getTime()
+      ? timeToTimestamp(report.timer.run[0].end)
       : new Date(report.timer.run.end).getTime();
 
     if (showSummary) {

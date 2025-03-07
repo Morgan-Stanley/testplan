@@ -852,7 +852,7 @@ class TestFIXNamespace:
         assert (
             _22[0] == 0
             and _22[2][0].lower() == comparison.Match.IGNORED
-            and _22[3][1] == "5"
+            and _22[3][1] == 5
             and _22[4][1] == "ABSENT"
         )
         _55_1, _55_2 = [item for item in comp_result if item[1] == 55]
@@ -860,14 +860,14 @@ class TestFIXNamespace:
         assert (
             _55_2[0] == 1
             and _55_2[2][0].lower() == comparison.Match.IGNORED
-            and _55_2[3][1] == "4"
+            and _55_2[3][1] == 4
             and _55_2[4][1] == "ABSENT"
         )
         _38 = [item for item in comp_result if item[1] == 38][0]
         assert (
             _38[0] == 0
             and _38[2][0].lower() == comparison.Match.IGNORED
-            and _38[3][1] == "5"
+            and _38[3][1] == 5
             and _38[4][1] == "ABSENT"
         )
         _555 = [item for item in comp_result if item[1] == 555][0]

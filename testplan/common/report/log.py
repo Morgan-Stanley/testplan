@@ -28,9 +28,9 @@ class ReportLogHandler(logging.Handler):
         if hasattr(record, "report_obj_id"):
             report = REPORT_MAP.get(record.report_obj_id)
             if report is not None:
-                created = datetime.datetime.utcfromtimestamp(
+                created = datetime.datetime.fromtimestamp(
                     record.created
-                ).replace(tzinfo=timezone.utc)
+                ).astimezone()
                 report.logs.append(
                     {
                         "message": self.format(record),

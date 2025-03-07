@@ -29,11 +29,9 @@ TEST_SUITE_MODULES = [
             {
                 "type": "Equal",
                 "meta_type": "assertion",
-                "category": "DEFAULT",
                 "description": "Equal Assertion",
                 "label": "==",
                 "passed": False,
-                "flag": "DEFAULT",
                 "first": 1,
                 "second": 0,
                 "type_expected": "int",
@@ -44,11 +42,9 @@ TEST_SUITE_MODULES = [
             {
                 "type": "Equal",
                 "meta_type": "assertion",
-                "category": "DEFAULT",
                 "description": "Equal Assertion",
                 "label": "==",
                 "passed": True,
-                "flag": "DEFAULT",
                 "first": 1,
                 "second": 1,
                 "type_expected": "int",
@@ -78,10 +74,8 @@ TEST_SUITE_MODULES = [
             {
                 "type": "IsTrue",
                 "meta_type": "assertion",
-                "category": "DEFAULT",
                 "description": "Truth Assertion",
                 "passed": True,
-                "flag": "DEFAULT",
                 "expr": True,
             }
         ],
@@ -89,19 +83,15 @@ TEST_SUITE_MODULES = [
             {
                 "type": "IsTrue",
                 "meta_type": "assertion",
-                "category": "DEFAULT",
                 "description": "Truth Assertion",
                 "passed": True,
-                "flag": "DEFAULT",
                 "expr": True,
             },
             {
                 "type": "IsFalse",
                 "meta_type": "assertion",
-                "category": "DEFAULT",
                 "description": "Fallacy Assertion",
                 "passed": True,
-                "flag": "DEFAULT",
                 "expr": False,
             },
         ],
@@ -127,20 +117,16 @@ TEST_SUITE_MODULES = [
             {
                 "type": "Fail",
                 "meta_type": "assertion",
-                "category": "DEFAULT",
                 "description": "Save a message into report",
                 "passed": False,
                 "message": "Save a message into report",
-                "flag": "DEFAULT",
             },
             {
                 "type": "IsClose",
                 "meta_type": "assertion",
-                "category": "DEFAULT",
                 "description": "Approximately Equal",
                 "label": "~=",
                 "passed": False,
-                "flag": "DEFAULT",
                 "first": 100,
                 "second": 95,
                 "rel_tol": 0.01,
@@ -151,19 +137,15 @@ TEST_SUITE_MODULES = [
             {
                 "type": "Log",
                 "meta_type": "entry",
-                "category": "DEFAULT",
                 "description": "Save a message into report",
                 "message": "Save a message into report",
-                "flag": "DEFAULT",
             },
             {
                 "type": "IsClose",
                 "meta_type": "assertion",
-                "category": "DEFAULT",
                 "description": "Approximately Equal",
                 "label": "~=",
                 "passed": True,
-                "flag": "DEFAULT",
                 "first": 100,
                 "second": 95,
                 "rel_tol": 0.1,
@@ -183,10 +165,8 @@ TEST_SUITE_MODULES = [
             {
                 "type": "IsFalse",
                 "meta_type": "assertion",
-                "category": "DEFAULT",
                 "description": "Fallacy Assertion",
                 "passed": False,
-                "flag": "DEFAULT",
                 "expr": True,
             }
         ],
@@ -194,10 +174,8 @@ TEST_SUITE_MODULES = [
             {
                 "type": "IsFalse",
                 "meta_type": "assertion",
-                "category": "DEFAULT",
                 "description": "Fallacy Assertion",
                 "passed": True,
-                "flag": "DEFAULT",
                 "expr": False,
             }
         ],
@@ -219,11 +197,9 @@ TEST_SUITE_MODULES = [
             {
                 "type": "Equal",
                 "meta_type": "assertion",
-                "category": "DEFAULT",
                 "description": "Equal Assertion",
                 "label": "==",
                 "passed": False,
-                "flag": "DEFAULT",
                 "first": 1,
                 "second": 0,
                 "type_expected": "int",
@@ -234,11 +210,9 @@ TEST_SUITE_MODULES = [
             {
                 "type": "Equal",
                 "meta_type": "assertion",
-                "category": "DEFAULT",
                 "description": "Equal Assertion",
                 "label": "==",
                 "passed": True,
-                "flag": "DEFAULT",
                 "first": 1,
                 "second": 1,
                 "type_expected": "int",
@@ -276,11 +250,9 @@ TEST_SUITE_MODULES = [
             {
                 "type": "NotEqual",
                 "meta_type": "assertion",
-                "category": "DEFAULT",
                 "description": "Not Equal Assertion",
                 "label": "!=",
                 "passed": False,
-                "flag": "DEFAULT",
                 "first": 0,
                 "second": 0,
             }
@@ -289,21 +261,17 @@ TEST_SUITE_MODULES = [
             {
                 "type": "NotEqual",
                 "meta_type": "assertion",
-                "category": "DEFAULT",
                 "description": "Not Equal Assertion",
                 "label": "!=",
                 "passed": True,
-                "flag": "DEFAULT",
                 "first": 0,
                 "second": 1,
             },
             {
                 "type": "Log",
                 "meta_type": "entry",
-                "category": "DEFAULT",
                 "description": "Save a message into report",
                 "message": "Save a message into report",
-                "flag": "DEFAULT",
             },
         ],
     ),
@@ -447,13 +415,7 @@ def main():
             module_info.original_report for module_info in TEST_SUITE_MODULES
         ],
         actual_reports=_get_actual_reports(plan),
-        ignore=[
-            "file_path",
-            "line_no",
-            "machine_time",
-            "utc_time",
-            "code_context",
-        ],
+        ignore=["file_path", "line_no", "timestamp"],
     )
     assert plan.interactive.report.passed is False
 
@@ -497,13 +459,7 @@ def main():
             module_info.updated_report for module_info in TEST_SUITE_MODULES
         ],
         actual_reports=actual_reports,
-        ignore=[
-            "file_path",
-            "line_no",
-            "machine_time",
-            "utc_time",
-            "code_context",
-        ],
+        ignore=["file_path", "line_no", "timestamp"],
     )
 
     assert plan.interactive.report.passed is True

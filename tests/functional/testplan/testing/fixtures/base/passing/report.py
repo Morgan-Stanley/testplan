@@ -102,7 +102,6 @@ expected_report_with_driver_and_driver_info_flag = TestReport(
                             entries=[
                                 {
                                     "type": "TableLog",
-                                    "indices": [0],
                                     "display_index": False,
                                     "columns": [
                                         "Driver Class",
@@ -111,7 +110,6 @@ expected_report_with_driver_and_driver_info_flag = TestReport(
                                         "Stop Time (UTC)",
                                         "Duration(seconds)",
                                     ],
-                                    "category": "DEFAULT",
                                     "table": [
                                         [
                                             "Driver",
@@ -133,7 +131,6 @@ expected_report_with_driver_and_driver_info_flag = TestReport(
                                     "type": "Plotly",
                                     "filesize": lambda x: isinstance(x, int),
                                     "dst_path": re.compile(r".*\.json"),
-                                    "category": "DEFAULT",
                                     "source_path": re.compile(r".*\.json"),
                                     "orig_filename": re.compile(r".*\.json"),
                                     "description": "Driver Setup Timeline",
@@ -141,7 +138,6 @@ expected_report_with_driver_and_driver_info_flag = TestReport(
                                 },
                                 {
                                     "type": "FlowChart",
-                                    "category": "DEFAULT",
                                     "description": "Driver Connections",
                                     "nodes": [
                                         {
@@ -172,7 +168,6 @@ expected_report_with_driver_and_driver_info_flag = TestReport(
                             entries=[
                                 {
                                     "type": "TableLog",
-                                    "indices": [0],
                                     "display_index": False,
                                     "columns": [
                                         "Driver Class",
@@ -181,7 +176,6 @@ expected_report_with_driver_and_driver_info_flag = TestReport(
                                         "Stop Time (UTC)",
                                         "Duration(seconds)",
                                     ],
-                                    "category": "DEFAULT",
                                     "table": [
                                         [
                                             "Driver",
@@ -203,7 +197,6 @@ expected_report_with_driver_and_driver_info_flag = TestReport(
                                     "type": "Plotly",
                                     "filesize": lambda x: isinstance(x, int),
                                     "dst_path": re.compile(r".*\.json"),
-                                    "category": "DEFAULT",
                                     "source_path": re.compile(r".*\.json"),
                                     "orig_filename": re.compile(r".*\.json"),
                                     "description": "Driver Teardown Timeline",
@@ -237,7 +230,6 @@ expected_report_with_driver_connections_and_driver_info_flag = TestReport(
                             entries=[
                                 {
                                     "type": "TableLog",
-                                    "indices": [0],
                                     "display_index": False,
                                     "columns": [
                                         "Driver Class",
@@ -246,7 +238,6 @@ expected_report_with_driver_connections_and_driver_info_flag = TestReport(
                                         "Stop Time (UTC)",
                                         "Duration(seconds)",
                                     ],
-                                    "category": "DEFAULT",
                                     "table": [
                                         [
                                             "TCPServer",
@@ -279,7 +270,6 @@ expected_report_with_driver_connections_and_driver_info_flag = TestReport(
                                     "type": "Plotly",
                                     "filesize": lambda x: isinstance(x, int),
                                     "dst_path": re.compile(r".*\.json"),
-                                    "category": "DEFAULT",
                                     "source_path": re.compile(r".*\.json"),
                                     "orig_filename": re.compile(r".*\.json"),
                                     "description": "Driver Setup Timeline",
@@ -287,7 +277,6 @@ expected_report_with_driver_connections_and_driver_info_flag = TestReport(
                                 },
                                 {
                                     "type": "FlowChart",
-                                    "category": "DEFAULT",
                                     "description": "Driver Connections",
                                     "nodes": [
                                         {
@@ -346,7 +335,6 @@ expected_report_with_driver_connections_and_driver_info_flag = TestReport(
                             entries=[
                                 {
                                     "type": "TableLog",
-                                    "indices": [0],
                                     "display_index": False,
                                     "columns": [
                                         "Driver Class",
@@ -355,7 +343,6 @@ expected_report_with_driver_connections_and_driver_info_flag = TestReport(
                                         "Stop Time (UTC)",
                                         "Duration(seconds)",
                                     ],
-                                    "category": "DEFAULT",
                                     "table": [
                                         [
                                             re.compile(r"TCPClient|TCPServer"),
@@ -388,7 +375,6 @@ expected_report_with_driver_connections_and_driver_info_flag = TestReport(
                                     "type": "Plotly",
                                     "filesize": lambda x: isinstance(x, int),
                                     "dst_path": re.compile(r".*\.json"),
-                                    "category": "DEFAULT",
                                     "source_path": re.compile(r".*\.json"),
                                     "orig_filename": re.compile(r".*\.json"),
                                     "description": "Driver Teardown Timeline",

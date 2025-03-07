@@ -4,7 +4,6 @@ import collections.abc
 import concurrent
 import functools
 import itertools
-import os
 import warnings
 from typing import Callable, Dict, Generator, List, Optional, Tuple
 
@@ -224,9 +223,6 @@ class MultiTestConfig(testing_base.TestConfig):
                     and tup[1] > 1,
                 ),
             ),
-            config.ConfigOption("fix_spec_path", default=None): Or(
-                None, And(str, os.path.exists)
-            ),
             config.ConfigOption("testcase_report_target", default=True): bool,
         }
 
@@ -259,8 +255,6 @@ class MultiTest(testing_base.Test):
         know which part of the total it is. Only works with Multitest.
     :type part: ``tuple`` of (``int``, ``int``)
     :type result: :py:class:`~testplan.testing.multitest.result.result.Result`
-    :param fix_spec_path: Path of fix specification file.
-    :type fix_spec_path: ``NoneType`` or ``str``.
     :param testcase_report_target: Whether to mark testcases as assertions for filepath
         and line number information
     :type testcase_report_target: ``bool``
@@ -297,7 +291,6 @@ class MultiTest(testing_base.Test):
         stdout_style=None,
         tags=None,
         result=result.Result,
-        fix_spec_path=None,
         testcase_report_target=True,
         **options,
     ):
@@ -310,6 +303,11 @@ class MultiTest(testing_base.Test):
                 DeprecationWarning,
             )
             del options["multi_part_uid"]
+        if "fix_spec_path" in options:
+            warnings.warn(
+                "``fix_spec_path`` no longer accepted, please remove it."
+            )
+            del options["fix_spec_path"]
 
         options.update(self.filter_locals(locals()))
         super(MultiTest, self).__init__(**options)
@@ -730,7 +728,6 @@ class MultiTest(testing_base.Test):
             category=ReportCategories.MULTITEST,
             tags=self.cfg.tags,
             part=self.cfg.part,
-            fix_spec_path=self.cfg.fix_spec_path,
             env_status=entity.ResourceStatus.STOPPED,
         )
 

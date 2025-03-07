@@ -76,15 +76,15 @@ jobs:
         with:
           python-version: 3.11
       - name: Set up Node
-        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
-          node-version: "16.x"
+          node-version: 20
       - name: Restore pip cache
         uses: ./.github/actions/pip-cache
       - name: Set up PNPM
         uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
         with:
-          version: 8.10.4
+          version: 9
       - name: Setup
         run: |
           pip install -r requirements-build.txt -U
@@ -133,7 +133,7 @@ jobs:
       - name: Set up Kafka for tests
         if: ${{ matrix.os == 'ubuntu-22.04' }}
         run: |
-          wget https://archive.apache.org/dist/kafka/3.5.2/kafka_2.13-3.5.2.tgz -O kafka.tgz
+          wget https://dlcdn.apache.org/kafka/3.9.0/kafka_2.13-3.9.0.tgz -O kafka.tgz
           sudo mkdir /opt/kafka
           sudo chown -R $USER:$USER /opt/kafka
           tar zxf kafka.tgz -C /opt/kafka --strip-components 1

@@ -44,16 +44,63 @@ export function dictCellStyle(params) {
  * items. "Failed" items are placed at the top while "Ignored" items at bottom.
  */
 const statusIndex = (status) => {
-  switch (status.toLowerCase()) {
-    case "failed":
+  switch (status) {
+    case "Failed":
       return 0;
-    case "passed":
+    case "Passed":
       return 1;
-    case "ignored":
+    case "Ignored":
       return 2;
     default:
       return 99;
   }
+};
+
+const expandStatus = (rows) => {
+  return rows.map((row) => {
+    let status = row[2];
+    switch (status) {
+      case "f":
+        status = "Failed";
+        break;
+      case "p":
+        status = "Passed";
+        break;
+      case "i":
+        status = "Ignored";
+        break;
+      default:
+    }
+
+    return [row[0], row[1], status, row[3], row[4]];
+  });
+};
+
+export const preprocessDictRows = (rows, isMatchRows) => {
+  // we have new format rows which have their level info delta encoded (rows
+  // is now a heterogeneous array), we need to convert them to the old format
+  if (
+    isMatchRows &&
+    rows.every((row) => Array.isArray(row) && row.length === 5)
+  ) {
+    return rows;
+  }
+  if (rows.every((row) => Array.isArray(row) && row.length === 3)) {
+    return rows;
+  }
+  let level = 0;
+  let decodedRows = [];
+  for (let row of rows) {
+    if (Number.isInteger(row)) {
+      level += row;
+    } else {
+      decodedRows.push([level, ...row]);
+    }
+  }
+  if (isMatchRows) {
+    return expandStatus(decodedRows);
+  }
+  return decodedRows;
 };
 
 /**
@@ -238,13 +285,10 @@ export function prepareDictColumnDefs(cellStyle, cellRenderer, hasExpected) {
  * Prepare the rows for Dict/FixMatch assertions.
  *
  * @param {object} data - Result of the assertion as a flattened dictionary
- * @param {number} lineNo - lineNo property of the assertion used to identify
- * the assertion on the rendered page. This is not what lineNo was intened to be
- * used for. It would be better to use some UUID to indentify each Assertion.
  * @returns {Array}
  * @private
  */
-export function prepareDictRowData(data, lineNo) {
+export function prepareDictRowData(data) {
   return data.map((line, index, originalArray) => {
     let level, key, status, expectedValue, actualValue;
     const isLog = line.length === 3;
@@ -262,7 +306,6 @@ export function prepareDictRowData(data, lineNo) {
 
     let lineObject = {
       descriptor: {
-        lineNo: lineNo,
         indent: level,
         isListKey:
           originalArray[index + 1] &&

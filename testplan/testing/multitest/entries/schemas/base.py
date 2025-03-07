@@ -1,11 +1,16 @@
 """
 Base classes / logic for marshalling go here.
 """
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, post_dump
+
 from testplan.common.serialization import fields as custom_fields
-
-
 from testplan.common.serialization.schemas import SchemaRegistry
+from testplan.common.utils.convert import delta_encode_level
+from testplan.testing.multitest.entries.base import (
+    DEFAULT_CATEGORY,
+    DEFAULT_FLAG,
+)
+
 from .. import base
 
 
@@ -24,30 +29,55 @@ class GenericEntryList(fields.Field):
 
 @registry.bind_default()
 class BaseSchema(Schema):
-    utc_time = custom_fields.UTCDateTime()
-    machine_time = custom_fields.LocalDateTime()
     type = custom_fields.ClassName()
     meta_type = fields.String()
+    timestamp = fields.DateTime("timestamp")
     description = custom_fields.Unicode()
-    line_no = fields.Integer()
     category = fields.String()
     flag = fields.String()
-    file_path = fields.String()
-    code_context = fields.String()
     custom_style = fields.Dict(keys=fields.String(), values=fields.String())
+
+    # optional
+    line_no = fields.Integer(allow_none=True)
+    file_path = fields.String(allow_none=True)
+    code_context = fields.String(allow_none=True)
+
+    # # deprecated, but this is a dump_only schema
+    # utc_time = custom_fields.UTCDateTime(allow_none=True, load_only=True)
+    # machine_time = custom_fields.LocalDateTime(allow_none=True, load_only=True)
 
     def load(self, *args, **kwargs):
         raise NotImplementedError("Only serialization is supported.")
+
+    @post_dump
+    def streamline(self, data, **kwargs):
+        # since source code is always available,
+        # none-test on file_path should be reliable
+        if data["file_path"] is None:
+            del data["line_no"]
+            del data["file_path"]
+            del data["code_context"]
+        if data["category"] == DEFAULT_CATEGORY:
+            del data["category"]
+        if data["flag"] == DEFAULT_FLAG:
+            del data["flag"]
+        return data
 
 
 @registry.bind(base.Group, base.Summary)
 class GroupSchema(Schema):
     type = custom_fields.ClassName()
-    utc_time = custom_fields.UTCDateTime()
+    timestamp = fields.DateTime("timestamp")
     passed = fields.Boolean()
     meta_type = fields.String()
     description = custom_fields.Unicode(allow_none=True)
     entries = GenericEntryList(allow_none=True)
+
+    # # deprecated, but this is a dump_only schema
+    # utc_time = custom_fields.UTCDateTime(allow_none=True, load_only=True)
+
+    def load(self, *args, **kwargs):
+        raise NotImplementedError("Only serialization is supported.")
 
 
 @registry.bind(base.Log)
@@ -70,7 +100,6 @@ class MarkdownSchema(BaseSchema):
 @registry.bind(base.TableLog)
 class TableLogSchema(BaseSchema):
     table = fields.List(fields.List(custom_fields.NativeOrPretty()))
-    indices = fields.List(fields.Integer(), allow_none=True)
     display_index = fields.Boolean()
     columns = fields.List(fields.String(), allow_none=False)
 
@@ -78,6 +107,11 @@ class TableLogSchema(BaseSchema):
 @registry.bind(base.DictLog, base.FixLog)
 class DictLogSchema(BaseSchema):
     flattened_dict = fields.Raw()
+
+    @post_dump
+    def compress_level(self, data, many, **kw):
+        data["flattened_dict"] = delta_encode_level(data["flattened_dict"])
+        return data
 
 
 @registry.bind(base.Graph)

@@ -1,5 +1,5 @@
 import React from "react";
-import { shallow } from "enzyme";
+import { render } from "@testing-library/react";
 import { StyleSheetTestUtils } from "aphrodite";
 
 import FixLogAssertion from "../FixLogAssertion";
@@ -31,19 +31,58 @@ function defaultProps() {
   };
 }
 
+const newSimpleProps = () => ({
+  assertion: {
+    type: "FixLog",
+    meta_type: "entry",
+    timestamp: 1741056209.060932,
+    description: null,
+    flattened_dict: [
+      [36, ["int", 6]],
+      [22, ["int", 5]],
+      [55, ["int", 2]],
+      [38, ["int", 5]],
+      [555, ""],
+      ["", ""],
+      1,
+      [556, ["str", "USD"]],
+      [624, ["int", 1]],
+      -1,
+      ["", ""],
+      1,
+      [556, ["str", "EUR"]],
+      [624, ["int", 2]],
+    ],
+  },
+});
+
 describe("FixLogAssertion", () => {
-  let props;
-  let shallowComponent;
+  let component;
 
   beforeEach(() => {
     // Stop Aphrodite from injecting styles, this crashes the tests.
     StyleSheetTestUtils.suppressStyleInjection();
-    props = defaultProps();
-    shallowComponent = undefined;
   });
 
-  it("shallow renders the correct HTML structure", () => {
-    shallowComponent = shallow(<FixLogAssertion {...props} />);
-    expect(shallowComponent).toMatchSnapshot();
+  it("renders the correct HTML structure with old format data", () => {
+    component = render(<FixLogAssertion {...defaultProps()} />);
+    expect(component.asFragment()).toMatchSnapshot();
+    expect(component.getAllByText("624")).toHaveLength(2);
+    expect(
+      component
+        .getByText("36")
+        .compareDocumentPosition(component.getByText("38"))
+    ).toEqual(Node.DOCUMENT_POSITION_FOLLOWING);
+  });
+
+  it("renders the correct HTML structure with new format data", () => {
+    component = render(<FixLogAssertion {...newSimpleProps()} />);
+    expect(component.asFragment()).toMatchSnapshot();
+    expect(component.getAllByText("556")).toHaveLength(2);
+    expect(
+      component
+        .getByText("55")
+        .compareDocumentPosition(component.getByText("38"))
+    ).toEqual(Node.DOCUMENT_POSITION_FOLLOWING);
   });
 });

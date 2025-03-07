@@ -11,6 +11,7 @@ from testplan.common.exporters.pdf import (
     format_table_style,
     split_text,
 )
+from testplan.common.utils.convert import delta_decode_level
 from testplan.common.utils.registry import Registry
 from testplan.exporters.testing.pdf.renderers.base import SlicedParagraph
 from testplan.testing.multitest.entries import base
@@ -298,7 +299,7 @@ class TableLogRenderer(SerializedEntryRenderer):
         table = create_table(
             table=source["table"],
             columns=source["columns"],
-            row_indices=source["indices"],
+            row_indices=list(range(len(source["table"]))),
             display_index=source["display_index"],
             max_width=max_width,
             style=table_style,
@@ -320,8 +321,9 @@ class DictLogRenderer(SerializedEntryRenderer):
         """
         header = self.get_header(source, depth, row_idx)
         row_idx += 1
+        flattened_dict = delta_decode_level(source["flattened_dict"])
 
-        if len(source["flattened_dict"]) == 0:
+        if len(flattened_dict) == 0:
             return header + RowData(
                 content=["(empty)", "", "", ""],
                 style=[
@@ -334,7 +336,7 @@ class DictLogRenderer(SerializedEntryRenderer):
                 start=row_idx,
             )
 
-        for idx, row in enumerate(source["flattened_dict"]):
+        for idx, row in enumerate(flattened_dict):
             offset, key, val = row
             header += RowData(
                 content=[

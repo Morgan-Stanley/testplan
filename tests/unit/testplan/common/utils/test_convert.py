@@ -7,10 +7,10 @@ comparisons = [
     # expected = {38: 5, 555: [{600: 'A'}], 54: 2, 851: 4}
     # actual = {38: 4, 54: 2, 20001: "SAMPLE"}
     [
-        (38, "f", (0, "int", "5"), (0, "int", "4")),
+        (38, "f", (0, "int", 5), (0, "int", 4)),
         (555, "f", (1, [(2, [(600, (0, "str", "A"))])]), (0, None, "ABSENT")),
-        (54, "p", (0, "int", "2"), (0, "int", "2")),
-        (851, "f", (0, "int", "4"), (0, None, "ABSENT")),
+        (54, "p", (0, "int", 2), (0, "int", 2)),
+        (851, "f", (0, "int", 4), (0, None, "ABSENT")),
         (20001, "f", (0, None, "ABSENT"), (0, "str", "SAMPLE")),
     ],
 ]
@@ -21,13 +21,13 @@ result_tables = [
     # which should not be popped together with a right side entry
     # unless the same repeating group is present
     [
-        [0, 38, "Failed", ("int", "5"), ("int", "4")],
-        [0, 555, "Failed", "", (None, "ABSENT")],
-        [0, "", "Failed", "", None],
-        [1, 600, "Failed", ("str", "A"), None],
-        [0, 54, "Passed", ("int", "2"), ("int", "2")],
-        [0, 851, "Failed", ("int", "4"), (None, "ABSENT")],
-        [0, 20001, "Failed", (None, "ABSENT"), ("str", "SAMPLE")],
+        [0, 38, "f", ("int", 5), ("int", 4)],
+        [0, 555, "f", "", (None, "ABSENT")],
+        [0, "", "f", "", None],
+        [1, 600, "f", ("str", "A"), None],
+        [0, 54, "p", ("int", 2), ("int", 2)],
+        [0, 851, "f", ("int", 4), (None, "ABSENT")],
+        [0, 20001, "f", (None, "ABSENT"), ("str", "SAMPLE")],
     ],
 ]
 

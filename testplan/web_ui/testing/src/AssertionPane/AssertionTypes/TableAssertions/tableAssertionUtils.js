@@ -226,9 +226,8 @@ export function prepareTableLogRowData(indexes, table, columns, display_index) {
 
   indexes.forEach((index) => {
     let row = columns.reduce((accumulator, column, idx) => {
-      if (Array.isArray(table[index])) accumulator[column] = table[index][idx];
-      // TODO: remove this branch after 3 months 2021.06.01
-      else accumulator[column] = table[index][column];
+      // Array.isArray(table[index])
+      accumulator[column] = table[index][idx];
       return accumulator;
     }, {});
     if (display_index) row["id"] = index;

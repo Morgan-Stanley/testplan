@@ -29,10 +29,7 @@ export default function FixCellRenderer(props) {
     return null;
   }
 
-  const lineNo = props.data.descriptor.lineNo;
-  const rowIndex = props.rowIndex;
   const colField = props.colDef.field;
-  const toolTipId = `id_${lineNo}_${rowIndex}_${colField}`;
   const tagInfo = defaultFixSpec.tags[props.data.key.value];
   let toolTipComp = null;
 
@@ -63,7 +60,6 @@ export default function FixCellRenderer(props) {
   return (
     <>
       <DictCellRenderer
-        id={toolTipId}
         data={props.data}
         value={props.value}
         colDef={props.colDef}

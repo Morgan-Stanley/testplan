@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`LogfileMatchAssertion shallow renders the correct HTML structure 1`] = `
-<Fragment>
+exports[`LogfileMatchAssertion renders the correct HTML structure 1`] = `
+<DocumentFragment>
   <div>
     <span>
       <b>
@@ -9,26 +9,179 @@ exports[`LogfileMatchAssertion shallow renders the correct HTML structure 1`] = 
       </b>
     </span>
   </div>
-  <LogfileMatchEntry
-    endPos="<inode 110000, position 5>"
-    key="logmatch0"
-    matched="okok"
-    pattern=".*ok.*"
-    startPos="<BOF>"
-  />
-  <LogfileMatchEntry
-    endPos="<inode 110000, position 10>"
-    key="logmatch1"
-    matched="okok"
-    pattern=".*ok.*"
-    startPos="<inode 110000, position 5>"
-  />
-  <LogfileMatchEntry
-    endPos="<inode 110000, position 15>"
-    key="logmatch2"
-    matched={null}
-    pattern=".*ok.*"
-    startPos="<inode 110000, position 10>"
-  />
-</Fragment>
+  <div>
+    <span
+      class="infoText_1m1rj1t"
+    >
+      Match between &lt;BOF&gt; and &lt;inode 110000, position 5&gt; found.
+    </span>
+  </div>
+  <div>
+    <strong
+      class="title_81sjt7"
+    >
+      Pattern:
+    </strong>
+    <span
+      style="color: black; background: rgb(245, 242, 240); text-shadow: 0 1px white; font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; font-size: 1em; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; word-wrap: normal; line-height: 1.5; tab-size: 4; hyphens: none; padding: 0px; margin: .5em 0px; overflow: auto;"
+    >
+      <code
+        class="language-regex"
+        style="color: black; background: none; text-shadow: 0 1px white; font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; font-size: 1em; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; word-wrap: normal; line-height: 1.5; tab-size: 4; hyphens: none;"
+      >
+        <span
+          class="token char-set"
+          style="color: rgb(221, 74, 104);"
+        >
+          .
+        </span>
+        <span
+          class="token quantifier"
+          style="color: rgb(153, 0, 85);"
+        >
+          *
+        </span>
+        <span>
+          ok
+        </span>
+        <span
+          class="token char-set"
+          style="color: rgb(221, 74, 104);"
+        >
+          .
+        </span>
+        <span
+          class="token quantifier"
+          style="color: rgb(153, 0, 85);"
+        >
+          *
+        </span>
+      </code>
+    </span>
+  </div>
+  <div>
+    <strong
+      class="title_81sjt7"
+    >
+      Log Line:
+    </strong>
+    <span
+      class="inputText_197f7f1"
+    >
+      okok
+    </span>
+  </div>
+  <div>
+    <span
+      class="infoText_1m1rj1t"
+    >
+      Match between &lt;inode 110000, position 5&gt; and &lt;inode 110000, position 10&gt; found.
+    </span>
+  </div>
+  <div>
+    <strong
+      class="title_81sjt7"
+    >
+      Pattern:
+    </strong>
+    <span
+      style="color: black; background: rgb(245, 242, 240); text-shadow: 0 1px white; font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; font-size: 1em; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; word-wrap: normal; line-height: 1.5; tab-size: 4; hyphens: none; padding: 0px; margin: .5em 0px; overflow: auto;"
+    >
+      <code
+        class="language-regex"
+        style="color: black; background: none; text-shadow: 0 1px white; font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; font-size: 1em; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; word-wrap: normal; line-height: 1.5; tab-size: 4; hyphens: none;"
+      >
+        <span
+          class="token char-set"
+          style="color: rgb(221, 74, 104);"
+        >
+          .
+        </span>
+        <span
+          class="token quantifier"
+          style="color: rgb(153, 0, 85);"
+        >
+          *
+        </span>
+        <span>
+          ok
+        </span>
+        <span
+          class="token char-set"
+          style="color: rgb(221, 74, 104);"
+        >
+          .
+        </span>
+        <span
+          class="token quantifier"
+          style="color: rgb(153, 0, 85);"
+        >
+          *
+        </span>
+      </code>
+    </span>
+  </div>
+  <div>
+    <strong
+      class="title_81sjt7"
+    >
+      Log Line:
+    </strong>
+    <span
+      class="inputText_197f7f1"
+    >
+      okok
+    </span>
+  </div>
+  <div>
+    <span
+      class="infoText_1m1rj1t"
+    >
+      No match from &lt;inode 110000, position 10&gt; found, search ended at &lt;inode 110000, position 15&gt;
+    </span>
+  </div>
+  <div>
+    <strong
+      class="title_81sjt7"
+    >
+      Pattern:
+    </strong>
+    <span
+      style="color: black; background: rgb(245, 242, 240); text-shadow: 0 1px white; font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; font-size: 1em; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; word-wrap: normal; line-height: 1.5; tab-size: 4; hyphens: none; padding: 0px; margin: .5em 0px; overflow: auto;"
+    >
+      <code
+        class="language-regex"
+        style="color: black; background: none; text-shadow: 0 1px white; font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; font-size: 1em; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; word-wrap: normal; line-height: 1.5; tab-size: 4; hyphens: none;"
+      >
+        <span
+          class="token char-set"
+          style="color: rgb(221, 74, 104);"
+        >
+          .
+        </span>
+        <span
+          class="token quantifier"
+          style="color: rgb(153, 0, 85);"
+        >
+          *
+        </span>
+        <span>
+          ok
+        </span>
+        <span
+          class="token char-set"
+          style="color: rgb(221, 74, 104);"
+        >
+          .
+        </span>
+        <span
+          class="token quantifier"
+          style="color: rgb(153, 0, 85);"
+        >
+          *
+        </span>
+      </code>
+    </span>
+  </div>
+</DocumentFragment>
 `;

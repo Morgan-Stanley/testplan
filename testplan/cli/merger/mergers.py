@@ -48,6 +48,7 @@ class SimpleCombiner:
                 description.append(f"{report.description}\n")
 
             # TODO: what to do with meta, tags_index
+            # TODO: timer & timezone
         result.description = "\n".join(description)
 
         return result

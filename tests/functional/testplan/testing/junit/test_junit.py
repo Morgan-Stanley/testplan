@@ -26,13 +26,10 @@ expect_report = TestGroupReport(
                     entries=[
                         {
                             "content": "Testcase contextLoads() passed",
-                            "flag": "DEFAULT",
                             "passed": True,
                             "description": "Passed",
                             "meta_type": "assertion",
                             "type": "RawAssertion",
-                            "category": "DEFAULT",
-                            "line_no": None,
                         }
                     ],
                 )
@@ -47,21 +44,15 @@ expect_report = TestGroupReport(
                     name="testGet()",
                     entries=[
                         {
-                            "flag": "DEFAULT",
                             "passed": False,
                             "meta_type": "assertion",
                             "type": "Fail",
-                            "category": "DEFAULT",
-                            "line_no": None,
                         },
                         {
-                            "flag": "DEFAULT",
                             "language": "java",
                             "description": "stacktrace",
                             "meta_type": "entry",
                             "type": "CodeLog",
-                            "category": "DEFAULT",
-                            "line_no": None,
                         },
                     ],
                 )
@@ -76,29 +67,20 @@ expect_report = TestGroupReport(
                     name="ExitCodeCheck",
                     entries=[
                         {
-                            "flag": "DEFAULT",
                             "passed": True,
                             "description": "Process exit code check",
                             "meta_type": "assertion",
                             "type": "RawAssertion",
-                            "category": "DEFAULT",
-                            "line_no": None,
                         },
                         {
-                            "flag": "DEFAULT",
                             "description": "Process stdout",
                             "meta_type": "entry",
                             "type": "Attachment",
-                            "category": "DEFAULT",
-                            "line_no": None,
                         },
                         {
-                            "flag": "DEFAULT",
                             "description": "Process stderr",
                             "meta_type": "entry",
                             "type": "Attachment",
-                            "category": "DEFAULT",
-                            "line_no": None,
                         },
                     ],
                 )

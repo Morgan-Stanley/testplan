@@ -1,50 +1,64 @@
 import React from "react";
-import { shallow } from "enzyme";
+import { render } from "@testing-library/react";
 import { StyleSheetTestUtils } from "aphrodite";
-import { getDefaultStore } from "jotai";
 
 import AssertionHeader from "../AssertionHeader";
-import { showStatusIconsPreference } from "../../UserSettings/UserSettings";
 
-function defaultProps() {
-  return {
-    assertion: {
-      category: "DEFAULT",
-      machine_time: "2019-02-12T17:41:42.795536+00:00",
-      description: null,
-      line_no: 25,
-      label: "==",
-      second: "foo",
-      meta_type: "assertion",
-      passed: true,
-      type: "Equal",
-      utc_time: "2019-02-12T17:41:42.795530+00:00",
-      first: "foo",
-    },
-    index: 0,
-    onClick: jest.fn(),
-  };
-}
+const props = {
+  assertion: {
+    utc_time: "2024-12-24T09:35:56.113946+00:00",
+    machine_time: "2024-12-24T17:35:56.113951+08:00",
+    type: "Equal",
+    meta_type: "assertion",
+    description: "soda water == soda water",
+    line_no: 26,
+    category: "DEFAULT",
+    flag: "DEFAULT",
+    file_path: "/dummy/examples/Driver/Dependency/suites.py",
+    passed: true,
+    first: "soda water",
+    second: "soda water",
+    label: "==",
+    type_actual: "str",
+    type_expected: "str",
+  },
+  displayPath: false,
+  uid: "c260c2af-888a-4853-86b2-82a14f44066e", // generated
+  toggleExpand: jest.fn(),
+  showStatusIcons: false,
+};
 
 describe("AssertionHeader", () => {
-  let props;
-  let shallowComponent;
+  let component;
 
   beforeEach(() => {
     // Stop Aphrodite from injecting styles, this crashes the tests.
     StyleSheetTestUtils.suppressStyleInjection();
-    props = defaultProps();
-    shallowComponent = undefined;
   });
 
-  it("shallow renders the correct HTML structure", () => {
-    shallowComponent = shallow(<AssertionHeader {...props} />);
-    expect(shallowComponent).toMatchSnapshot();
+  it("renders the correct HTML structure", () => {
+    component = render(<AssertionHeader {...props} />);
+    expect(component.getByText(props.assertion.description)).toBeDefined();
+    expect(component.asFragment()).toMatchSnapshot();
   });
 
-  it("shallow renders the correct HTML structure with status icons enabled", () => {
-    getDefaultStore().set(showStatusIconsPreference, true);
-    shallowComponent = shallow(<AssertionHeader {...props} />);
-    expect(shallowComponent).toMatchSnapshot();
+  it("renders the correct HTML structure with status icons enabled", () => {
+    component = render(
+      <AssertionHeader {...{ ...props, showStatusIcons: true }} />
+    );
+    expect(
+      component.container.querySelector("svg").getAttribute("data-icon")
+    ).toEqual("check");
+    expect(component.asFragment()).toMatchSnapshot();
+  });
+
+  it("renders the correct HTML structure with code context enabled", () => {
+    component = render(
+      <AssertionHeader {...{ ...props, displayPath: true }} />
+    );
+    expect(
+      component.getByText(props.assertion.file_path, { exact: false })
+    ).toBeDefined();
+    expect(component.asFragment()).toMatchSnapshot();
   });
 });

@@ -1,5 +1,6 @@
 import React from "react";
-import { shallow } from "enzyme";
+import { render } from "@testing-library/react";
+import { MemoryRouter, Route } from "react-router-dom";
 import { StyleSheetTestUtils } from "aphrodite";
 
 import TableLogAssertion from "../TableLogAssertion";
@@ -16,9 +17,9 @@ function defaultProps() {
       columns: ["age", "name"],
       indices: [0, 1, 2],
       table: [
-        { age: 32, name: "Bob" },
-        { age: 24, name: "Susan" },
-        { age: 67, name: "Rick" },
+        [32, "Bob"],
+        [24, "Susan"],
+        [67, "Rick"],
       ],
       type: "TableLog",
       utc_time: "2019-02-12T17:41:43.241777+00:00",
@@ -82,24 +83,55 @@ function advancedTableProps() {
   };
 }
 
+const newProps = () => ({
+  assertion: {
+    type: "TableLog",
+    meta_type: "entry",
+    timestamp: 1741061226.285205,
+    description: "Table Log: list of dicts",
+    table: [
+      ["Bob", 32],
+      ["Susan", 24],
+      ["Rick", 67],
+    ],
+    display_index: true,
+    columns: ["name", "age"],
+  },
+});
+
 describe("TableLogAssertion", () => {
-  let shallowComponent;
+  let component;
 
   beforeEach(() => {
     // Stop Aphrodite from injecting styles, this crashes the tests.
     StyleSheetTestUtils.suppressStyleInjection();
-    shallowComponent = undefined;
+    component = undefined;
   });
 
-  it("shallow renders the table log HTML structure", () => {
+  it("renders the table log HTML structure", () => {
     let props = defaultProps();
-    shallowComponent = shallow(<TableLogAssertion {...props} />);
-    expect(shallowComponent).toMatchSnapshot();
+    component = render(<TableLogAssertion {...props} />);
+    expect(component.asFragment()).toMatchSnapshot();
   });
 
-  it("shallow renders the advanced table log HTML structure", () => {
+  it("renders the advanced table log HTML structure", () => {
     let props = advancedTableProps();
-    shallowComponent = shallow(<TableLogAssertion {...props} />);
-    expect(shallowComponent).toMatchSnapshot();
+    // since we call useParams when rendering relative link
+    component = render(
+      <MemoryRouter initialEntries={["/testplan/dummy_uid"]}>
+        <Route path="/testplan/:uid">
+          <TableLogAssertion {...props} />
+        </Route>
+      </MemoryRouter>
+    );
+    expect(component.asFragment()).toMatchSnapshot();
+    expect(
+      component.getByText("Home").closest("a").getAttribute("href")
+    ).toEqual("/testplan/dummy_uid/");
+  });
+
+  it("renders the table log HTML structure given new format assertion", () => {
+    component = render(<TableLogAssertion {...newProps()} />);
+    expect(component.asFragment()).toMatchSnapshot();
   });
 });

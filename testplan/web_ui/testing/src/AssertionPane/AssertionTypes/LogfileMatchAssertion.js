@@ -36,7 +36,8 @@ const LogfileMatchAssertion = ({ assertion }) => {
   const { timeout, results, failure } = assertion;
 
   const timeoutMsg =
-    (assertion.passed ? "Passed" : "Failed") + (timeout === 0 ? " when scanning till <EOF>." : ` in ${timeout} seconds.`);
+    (assertion.passed ? "Passed" : "Failed") +
+    (timeout === 0 ? " when scanning till <EOF>." : ` in ${timeout} seconds.`);
   const entries = [...results, ...failure].map((entry, index) => {
     const { matched, pattern, start_pos: startPos, end_pos: endPos } = entry;
     return (

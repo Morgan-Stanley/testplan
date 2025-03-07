@@ -213,7 +213,8 @@ class TestReport:
         assert rsp.status_code == 200
 
         ihandler.run_all_tests.assert_called_once_with(
-            shallow_report=json_report, await_results=False
+            shallow_report=json_report,
+            await_results=False,
         )
 
     def test_put_reset(self, api_env):

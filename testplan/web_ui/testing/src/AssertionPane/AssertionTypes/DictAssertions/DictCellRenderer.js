@@ -60,7 +60,6 @@ export default function DictCellRenderer(props) {
     <div style={indentStyle}>
       <span
         style={{ userSelect: "all" }}
-        id={props.id}
         onMouseEnter={(event) => {
           if (props.tooltip) {
             setAnchorEl(event.currentTarget);

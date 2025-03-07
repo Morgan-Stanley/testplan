@@ -1,5 +1,5 @@
 import React from "react";
-import { shallow } from "enzyme";
+import { render } from "@testing-library/react";
 import { StyleSheetTestUtils } from "aphrodite";
 
 import LogfileMatchAssertion from "../LogfileMatchAssertion";
@@ -12,7 +12,7 @@ function defaultProps() {
       type: "LogfileMatch",
       meta_type: "assertion",
       category: "DEFAULT",
-      status: "passed",
+      passed: false,
       description: null,
       timeout: 2.0,
       results: [
@@ -20,22 +20,22 @@ function defaultProps() {
           matched: "okok",
           pattern: ".*ok.*",
           start_pos: "<BOF>",
-          end_pos: "<inode 110000, position 5>"
+          end_pos: "<inode 110000, position 5>",
         },
         {
           matched: "okok",
           pattern: ".*ok.*",
           start_pos: "<inode 110000, position 5>",
-          end_pos: "<inode 110000, position 10>"
-        }
+          end_pos: "<inode 110000, position 10>",
+        },
       ],
       failure: [
         {
           matched: null,
           pattern: ".*ok.*",
           start_pos: "<inode 110000, position 10>",
-          end_pos: "<inode 110000, position 15>"
-        }
+          end_pos: "<inode 110000, position 15>",
+        },
       ],
     },
   };
@@ -43,17 +43,17 @@ function defaultProps() {
 
 describe("LogfileMatchAssertion", () => {
   let props;
-  let shallowComponent;
+  let component;
 
   beforeEach(() => {
     // Stop Aphrodite from injecting styles, this crashes the tests.
     StyleSheetTestUtils.suppressStyleInjection();
     props = defaultProps();
-    shallowComponent = undefined;
+    component = undefined;
   });
 
-  it("shallow renders the correct HTML structure", () => {
-    shallowComponent = shallow(<LogfileMatchAssertion {...props} />);
-    expect(shallowComponent).toMatchSnapshot();
+  it("renders the correct HTML structure", () => {
+    component = render(<LogfileMatchAssertion {...props} />);
+    expect(component.asFragment()).toMatchSnapshot();
   });
 });

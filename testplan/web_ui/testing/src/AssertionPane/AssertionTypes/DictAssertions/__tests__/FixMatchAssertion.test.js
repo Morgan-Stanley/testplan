@@ -1,5 +1,5 @@
 import React from "react";
-import { shallow } from "enzyme";
+import { render } from "@testing-library/react";
 import { StyleSheetTestUtils } from "aphrodite";
 
 import FixMatchAssertion from "../FixMatchAssertion";
@@ -52,17 +52,17 @@ function defaultProps() {
 
 describe("FixMatchAssertion", () => {
   let props;
-  let shallowComponent;
+  let component;
 
   beforeEach(() => {
     // Stop Aphrodite from injecting styles, this crashes the tests.
     StyleSheetTestUtils.suppressStyleInjection();
     props = defaultProps();
-    shallowComponent = undefined;
+    component = undefined;
   });
 
-  it("shallow renders the correct HTML structure", () => {
-    shallowComponent = shallow(<FixMatchAssertion {...props} />);
-    expect(shallowComponent).toMatchSnapshot();
+  it("renders the correct HTML structure", () => {
+    component = render(<FixMatchAssertion {...props} />);
+    expect(component.asFragment()).toMatchSnapshot();
   });
 });

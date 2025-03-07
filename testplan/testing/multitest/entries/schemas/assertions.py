@@ -6,8 +6,10 @@ data directly.
 The reason being some assertion classes may have attributes that
 cannot be deserialized (processes, exception objects etc).
 """
-from marshmallow import fields, Schema
+from marshmallow import Schema, fields, post_dump
+
 from testplan.common.serialization import fields as custom_fields
+from testplan.common.utils.convert import delta_encode_level
 
 from .base import BaseSchema, registry
 from .. import assertions as asr
@@ -79,19 +81,14 @@ class MembershipSchema(AssertionSchema):
     asr.RegexMatchNotExists,
     asr.RegexSearch,
     asr.RegexSearchNotExists,
+    asr.RegexMatchLine,
 )
 class RegexSchema(AssertionSchema):
 
     string = custom_fields.NativeOrPretty()
     pattern = custom_fields.NativeOrPretty()
-    flags = fields.Integer()
+    # flags = fields.Integer()  # NOTE: never set & used up to now
     match_indexes = fields.List(fields.List(fields.Integer()))
-
-
-@registry.bind(asr.RegexMatchLine)
-class RegexMatchLineSchema(RegexSchema):
-
-    match_context = fields.List(fields.Dict())
 
 
 @registry.bind(asr.RegexFindIter)
@@ -117,6 +114,7 @@ class ExceptionRaisedSchema(AssertionSchema):
 
 @registry.bind(asr.EqualSlices, asr.EqualExcludeSlices)
 class EqualSlicesSchema(AssertionSchema):
+    # TODO: strip included_indices if of type EqualSlices
 
     data = fields.List(custom_fields.SliceComparisonField())
     included_indices = fields.List(fields.Integer())
@@ -137,15 +135,9 @@ class LineDiffSchema(AssertionSchema):
     delta = fields.List(custom_fields.NativeOrPretty())
 
 
-class ProcessExitStatusSchema(AssertionSchema):
-
-    process = custom_fields.NativeOrPretty()
-    expected_retcode = fields.Integer()
-    core_file = fields.String()
-
-
 @registry.bind(asr.ColumnContain)
 class ColumnContainSchema(AssertionSchema):
+    # XXX: if report_fails_only is False, strip row indices within data?
 
     # table = fields.List(custom_fields.NativeOrPrettyDict())
     values = fields.List(custom_fields.NativeOrPretty())
@@ -157,6 +149,7 @@ class ColumnContainSchema(AssertionSchema):
 
 @registry.bind(asr.TableMatch, asr.TableDiff)
 class TableMatchSchema(AssertionSchema):
+    # XXX: if report_fails_only is False, strip row indices within data?
 
     strict = fields.Boolean()
 
@@ -204,12 +197,23 @@ class DictMatchSchema(AssertionSchema):
     expected_description = fields.String()
     comparison = fields.Raw()
 
+    @post_dump
+    def compress_level(self, data, many, **kw):
+        data["comparison"] = delta_encode_level(data["comparison"])
+        return data
+
 
 @registry.bind(asr.DictMatchAll, asr.FixMatchAll)
 class DictMatchAllSchema(AssertionSchema):
 
     key_weightings = fields.Raw()
-    matches = fields.Function(lambda obj: {"matches": obj.matches})
+    matches = fields.Raw()
+
+    @post_dump
+    def compress_level(self, data, many, **kw):
+        for d in data["matches"]:
+            d["comparison"] = delta_encode_level(d["comparison"])
+        return data
 
 
 class LogfileMatchResultSchema(Schema):

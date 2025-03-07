@@ -1,89 +1,153 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`AssertionHeader shallow renders the correct HTML structure 1`] = `
-<CardHeader
-  className="cardHeader_1s246z6-o_O-cardHeaderColorPassed_1nxwz58"
-  tag="div"
->
+exports[`AssertionHeader renders the correct HTML structure 1`] = `
+<DocumentFragment>
   <div
-    style={
-      Object {
-        "display": "flex",
-      }
-    }
+    class="cardHeader_1s246z6-o_O-cardHeaderColorPassed_1nxwz58 card-header"
   >
-    <span
-      className="button_13xlah4"
-      style={
-        Object {
-          "alignItems": "center",
-          "display": "flex",
-          "flexGrow": 4,
-          "order": 4,
-          "padding": ".125rem 0.75rem",
-        }
-      }
+    <div
+      style="display: flex;"
     >
       <span
-        style={
-          Object {
-            "fontWeight": "bold",
-          }
-        }
-      />
-      <span>
-        (
-        Equal
-        )
+        class="button_13xlah4"
+        style="order: 4; flex-grow: 4; padding: .125rem 0.75rem; display: flex; align-items: center;"
+      >
+        <span
+          style="font-weight: bold;"
+        >
+          soda water == soda water 
+        </span>
+        <span>
+          (Equal)
+        </span>
       </span>
-    </span>
-    <span
-      className="cardHeaderAlignRight_107ja4p"
-    />
+      <span
+        class="cardHeaderAlignRight_107ja4p"
+      />
+    </div>
   </div>
-</CardHeader>
+</DocumentFragment>
 `;
 
-exports[`AssertionHeader shallow renders the correct HTML structure with status icons enabled 1`] = `
-<CardHeader
-  className="cardHeader_1s246z6-o_O-cardHeaderColorPassed_1nxwz58"
-  tag="div"
->
+exports[`AssertionHeader renders the correct HTML structure with code context enabled 1`] = `
+<DocumentFragment>
   <div
-    style={
-      Object {
-        "display": "flex",
-      }
-    }
+    class="cardHeader_1s246z6-o_O-cardHeaderColorPassed_1nxwz58 card-header"
   >
-    <span
-      className="button_13xlah4"
-      style={
-        Object {
-          "alignItems": "center",
-          "display": "flex",
-          "flexGrow": 4,
-          "order": 4,
-          "padding": ".125rem 0.75rem",
-        }
-      }
+    <div
+      style="display: flex;"
     >
       <span
-        style={
-          Object {
-            "fontWeight": "bold",
-          }
-        }
-      />
-      <span>
-        (
-        Equal
-        )
+        class="button_13xlah4"
+        style="order: 4; flex-grow: 4; padding: .125rem 0.75rem; display: flex; align-items: center;"
+      >
+        <span
+          style="font-weight: bold;"
+        >
+          soda water == soda water 
+        </span>
+        <span>
+          (Equal)
+        </span>
       </span>
-    </span>
-    <span
-      className="cardHeaderAlignRight_107ja4p"
-    />
+      <span
+        class="cardHeaderAlignRight_107ja4p"
+      />
+      <div
+        class="cardHeaderCode_658wrm-o_O-cardHeaderAlignRight_107ja4p-o_O-timeInfo_1kwowkq"
+        style="order: 6; margin-left: 10px;"
+      >
+        <span>
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text pathButton_vopdnm"
+            tabindex="0"
+            type="button"
+          >
+            <span
+              class="MuiButton-label"
+            >
+              <span
+                class="cardHeaderColorPassed_1nxwz58"
+                id="tooltip_path_c260c2af-888a-4853-86b2-82a14f44066e"
+              >
+                <span
+                  class="icon_erbgzi"
+                >
+                  <i
+                    class="fa fa-copy fa-s"
+                  />
+                </span>
+                <div
+                  class="cardHeaderPath_1b81ih6"
+                >
+                  <span
+                    class="cardHeaderPathInner_1mceyef"
+                  >
+                    /dummy/examples/Driver/Dependency/suites.py:26
+                  </span>
+                </div>
+              </span>
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </button>
+          <br />
+        </span>
+      </div>
+    </div>
   </div>
-</CardHeader>
+</DocumentFragment>
+`;
+
+exports[`AssertionHeader renders the correct HTML structure with status icons enabled 1`] = `
+<DocumentFragment>
+  <div
+    class="cardHeader_1s246z6-o_O-cardHeaderColorPassed_1nxwz58 card-header"
+  >
+    <div
+      style="display: flex;"
+    >
+      <span
+        class="button_13xlah4"
+        style="order: 4; flex-grow: 4; padding: .125rem 0.75rem; display: flex; align-items: center;"
+      >
+        <span
+          class="statusIcon_1xnyjf5"
+        >
+          <svg
+            aria-labelledby="svg-inline--fa-title-1"
+            class="svg-inline--fa fa-check fa-w-16 fa-sm icon_erbgzi"
+            data-icon="check"
+            data-prefix="fas"
+            role="img"
+            viewBox="0 0 512 512"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <title
+              id="svg-inline--fa-title-1"
+            >
+              passed
+            </title>
+            <path
+              d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"
+              fill="currentColor"
+            />
+          </svg>
+        </span>
+        <span
+          style="font-weight: bold;"
+        >
+          soda water == soda water 
+        </span>
+        <span>
+          (Equal)
+        </span>
+      </span>
+      <span
+        class="cardHeaderAlignRight_107ja4p"
+      />
+    </div>
+  </div>
+</DocumentFragment>
 `;

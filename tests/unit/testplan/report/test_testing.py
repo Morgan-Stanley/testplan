@@ -271,6 +271,23 @@ def test_report_serialization(dummy_test_plan_report):
     check_report(actual=deserialized_report, expected=dummy_test_plan_report)
 
 
+def test_report_serialize_attr_strip(dummy_test_plan_report):
+    data = dummy_test_plan_report.serialize()
+
+    def assert_report_entry(func, report):
+        assert func(report)
+        for entry in report["entries"]:
+            assert_report_entry(func, entry)
+
+    def check_attr(e):
+        if ReportCategories.is_test_level(e["category"]):
+            return "part" in e and "env_status" in e
+        else:
+            return "part" not in e and "env_status" not in e
+
+    assert_report_entry(check_attr, data)
+
+
 def test_report_json_serialization(dummy_test_plan_report):
     """JSON Serialized & deserialized reports should be equal."""
 
@@ -302,9 +319,9 @@ def test_report_json_binary_serialization(
 
     # dict.match the schema for that producing list of tuples
 
-    KEY_INDEX = 1
-    FIRST_INDEX = 3
-    SECOND_INDEX = 4
+    KEY_INDEX = 0
+    FIRST_INDEX = 2
+    SECOND_INDEX = 3
 
     comps = get_path(j, "entries.1.entries.0.entries.3.comparison")
     assert comps[0][KEY_INDEX] == str(b"binarykey\xB1")

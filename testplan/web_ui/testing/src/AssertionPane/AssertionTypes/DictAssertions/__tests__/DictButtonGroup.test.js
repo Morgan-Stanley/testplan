@@ -1,5 +1,5 @@
 import React from "react";
-import { shallow } from "enzyme";
+import { render } from "@testing-library/react";
 import { StyleSheetTestUtils } from "aphrodite";
 
 import { SORT_TYPES, FILTER_OPTIONS } from "./../../../../Common/defaults";
@@ -30,18 +30,18 @@ function defaultProps() {
 
 describe("DictLogAssertion", () => {
   let props;
-  let shallowComponent;
+  let component;
 
   beforeEach(() => {
     // Stop Aphrodite from injecting styles, this crashes the tests.
     StyleSheetTestUtils.suppressStyleInjection();
     props = {};
-    shallowComponent = undefined;
+    component = undefined;
   });
 
-  it("shallow renders DictButtonGroup component", () => {
+  it("renders DictButtonGroup component", () => {
     props = defaultProps();
-    shallowComponent = shallow(<DictButtonGroup {...props} />);
-    expect(shallowComponent).toMatchSnapshot();
+    component = render(<DictButtonGroup {...props} />);
+    expect(component.asFragment()).toMatchSnapshot();
   });
 });

@@ -20,6 +20,7 @@ from testplan.common.exporters.pdf import (
     split_text,
 )
 from testplan.common.utils.comparison import is_regex
+from testplan.common.utils.convert import delta_decode_level
 from testplan.exporters.testing.pdf.renderers.base import SlicedParagraph
 from testplan.report import Status
 from testplan.testing.multitest.entries import assertions
@@ -377,15 +378,18 @@ def append_comparison_data(data, row, depth, start_idx):
     """TODO."""
     offset, key, match, left, right = row
 
-    if match == "Passed":
+    if match == "p":
+        match = "Passed"
         item_color = colors.black
         status_color = colors.green
         font = const.FONT
-    elif match == "Failed":
+    elif match == "f":
+        match = "Failed"
         item_color = colors.black
         status_color = colors.red
         font = const.FONT_BOLD
-    else:
+    elif match == "i":
+        match = "Ignored"
         item_color = colors.grey
         status_color = colors.grey
         font = const.FONT_ITALIC
@@ -418,7 +422,7 @@ class DictMatchRenderer(AssertionRenderer):
     """FixMatch renderer for serialized assertion entries."""
 
     def get_detail(self, source, depth, row_idx):
-        comparison = source["comparison"]
+        comparison = delta_decode_level(source["comparison"])
 
         data = []
         for idx, row in enumerate(comparison):
@@ -500,8 +504,8 @@ class DictMatchAllRenderer(AssertionRenderer):
 
         data = []
         counter = 0
-        for match in matches["matches"]:
-            comparison = match["comparison"]
+        for match in matches:
+            comparison = delta_decode_level(match["comparison"])
             description = match["description"]
             passed = match["passed"]
 
