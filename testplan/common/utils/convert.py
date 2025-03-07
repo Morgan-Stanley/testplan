@@ -2,6 +2,7 @@
 import itertools
 from typing import Union, Tuple, Iterable, Callable, List, Sequence
 
+from .comparison import is_match_res
 from .reporting import Absent
 
 
@@ -93,12 +94,11 @@ def full_status(status: str) -> str:
     return ""
 
 
-def expand_values(
+def expand_match_res(
     rows: List[Tuple],
     level: int = 0,
     ignore_key: bool = False,
     key_path: List = None,
-    match: str = "",
 ):
     """
     Recursively expands and yields all rows of items to display.
@@ -107,7 +107,6 @@ def expand_values(
     :param level: recursive parameter for level of nesting
     :param ignore_key: recursive parameter for ignoring a key
     :param key_path: recursive parameter to build the sequence of keys
-    :param match: recursive parameter for inheriting match result
     :return: rows used in building comparison result table
     """
     if key_path is None:
@@ -120,26 +119,69 @@ def expand_values(
         if key is not Absent:  # `None` or empty string can also be used as key
             key_path.append(key)
 
-        match = row[1] if len(row) == 3 else match
-        val = row[2] if len(row) == 3 else row[1]
+        match = row[1]
+        val = row[2]
 
         if isinstance(val, tuple):
             if val[0] == 0:  # value
                 yield (tuple(key_path), level, key, match, (val[1], val[2]))
-            elif val[0] in (1, 2, 3):  # container
+            elif is_match_res(val[0]):  # ``_rec_compare``d container
                 yield (tuple(key_path), level, key, match, "")
-                yield from expand_values(
+                yield from expand_match_res(
+                    val[1],
+                    level=level + 1,
+                    ignore_key=True if val[0] == 11 else False,
+                    key_path=key_path,
+                )
+            elif val[0] in (1, 2):  # ``fmt``ed container
+                yield (tuple(key_path), level, key, match, "")
+                yield from expand_fmt_res(
                     val[1],
                     level=level + 1,
                     ignore_key=True if val[0] == 1 else False,
                     key_path=key_path,
                     match=match,
                 )
-        elif isinstance(val, list):
+            else:
+                raise ValueError(f"{val[0]}")
+        else:
+            raise TypeError
+
+        if key is not Absent:
+            key_path.pop()
+
+
+def expand_fmt_res(
+    rows: List[Tuple],
+    level: int,
+    ignore_key: bool,
+    key_path: List[str],
+    match: str,
+):
+
+    for row in rows:
+        key = row[0] if ignore_key is False else Absent
+        if key is not Absent:  # `None` or empty string can also be used as key
+            key_path.append(key)
+
+        val = row if ignore_key else row[1]
+
+        if not isinstance(val, tuple):
+            raise TypeError
+
+        if val[0] == 0:  # value
+            yield (tuple(key_path), level, key, match, (val[1], val[2]))
+        elif val[0] in (1, 2):  # container
             yield (tuple(key_path), level, key, match, "")
-            yield from expand_values(
-                val, level=level, key_path=key_path, match=match
+            yield from expand_fmt_res(
+                val[1],
+                level=level + 1,
+                ignore_key=True if val[0] == 1 else False,
+                key_path=key_path,
+                match=match,
             )
+        else:
+            raise ValueError
 
         if key is not Absent:
             key_path.pop()
@@ -234,8 +276,8 @@ def flatten_dict_comparison(comparison: List[Tuple]) -> List[List]:
     """
     result_table = []  # level, key, left, right, result
 
-    left = list(expand_values(extract_values(comparison, 2)))
-    right = list(expand_values(extract_values(comparison, 3)))
+    left = list(expand_match_res(extract_values(comparison, 2)))
+    right = list(expand_match_res(extract_values(comparison, 3)))
 
     while left or right:
         lpart, rpart = None, None
